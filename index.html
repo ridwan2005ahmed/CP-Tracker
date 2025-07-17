@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Competitive Programming Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Calibri', Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            min-height: 100vh;
+            background-color: #343a40;
+            color: white;
+            position: fixed;
+            width: 250px;
+        }
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 0.75rem 1rem;
+            border-radius: 0.25rem;
+            margin-bottom: 0.25rem;
+        }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .sidebar .nav-link i {
+            margin-right: 10px;
+        }
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        .card {
+            margin-bottom: 20px;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+        .card-header {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+        }
+        .table-responsive {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        .btn-add {
+            margin-bottom: 15px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .stats-card {
+            text-align: center;
+            padding: 15px;
+            border-radius: 0.5rem;
+            color: white;
+            margin-bottom: 20px;
+        }
+        .stats-card i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .stats-card.blue {
+            background-color: #007bff;
+        }
+        .stats-card.green {
+            background-color: #28a745;
+        }
+        .stats-card.orange {
+            background-color: #fd7e14;
+        }
+        .stats-card.purple {
+            background-color: #6f42c1;
+        }
+        .editable {
+            cursor: pointer;
+        }
+        .editable:hover {
+            background-color: #f8f9fa;
+        }
+        #auth-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #auth-box {
+            width: 300px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login/Signup Form (shown first) -->
+    <div id="auth-container">
+        <div id="auth-box">
+            <h3 class="text-center mb-4">CP Tracker Login</h3>
+            <div class="form-group">
+                <input type="email" id="email" class="form-control" placeholder="Email">
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" class="form-control" placeholder="Password">
+            </div>
+            <button id="login-btn" class="btn btn-primary w-100 mb-2">Login</button>
+            <button id="signup-btn" class="btn btn-secondary w-100">Sign Up</button>
+            <div id="auth-message" class="mt-3 text-center text-danger"></div>
+        </div>
+    </div>
+
+    <!-- Main App (hidden until login) -->
+    <div id="app-container" style="display: none;">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="p-4">
+                <h4 class="mb-4">CP Tracker</h4>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" data-section="dashboard">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="contests">
+                            <i class="bi bi-trophy"></i> Contest Log
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="daily">
+                            <i class="bi bi-calendar-day"></i> Daily Log
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="mistakes">
+                            <i class="bi bi-exclamation-triangle"></i> Mistake Log
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="topics">
+                            <i class="bi bi-book"></i> Topic Practice
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="analytics">
+                            <i class="bi bi-graph-up"></i> Analytics
+                        </a>
+                    </li>
+                    <li class="nav-item mt-4">
+                        <a class="nav-link text-warning" href="#" id="logout-btn">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Dashboard Section -->
+            <div id="dashboard-section">
+                <h2 class="mb-4">Dashboard</h2>
+                
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="stats-card blue">
+                            <i class="bi bi-trophy"></i>
+                            <h5>Contests</h5>
+                            <h3 id="total-contests">0</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-card green">
+                            <i class="bi bi-check-circle"></i>
+                            <h5>Problems Solved</h5>
+                            <h3 id="total-solved">0</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-card orange">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            <h5>Mistakes Logged</h5>
+                            <h3 id="total-mistakes">0</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-card purple">
+                            <i class="bi bi-book"></i>
+                            <h5>Topics Practiced</h5>
+                            <h3 id="total-topics">0</h3>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                Recent Contests
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Contest</th>
+                                                <th>Solved</th>
+                                                <th>Rating Δ</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="recent-contests">
+                                            <tr>
+                                                <td colspan="4" class="text-center">No contests yet</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                Recent Mistakes
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Problem</th>
+                                                <th>Mistake</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="recent-mistakes">
+                                            <tr>
+                                                <td colspan="3" class="text-center">No mistakes yet</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                Topics to Improve
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Topic</th>
+                                                <th>Confidence</th>
+                                                <th>Last Practiced</th>
+                                                <th>Notes</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="topics-to-improve">
+                                            <tr>
+                                                <td colspan="4" class="text-center">No topics yet</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contest Log Section -->
+            <div id="contests-section" style="display: none;">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Contest Log</h2>
+                    <button class="btn btn-primary btn-add" data-bs-toggle="modal" data-bs-target="#addContestModal">
+                        <i class="bi bi-plus"></i> Add Contest
+                    </button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Platform</th>
+                                        <th>Contest Name</th>
+                                        <th>Solved</th>
+                                        <th>Rating Δ</th>
+                                        <th>Rank</th>
+                                        <th>Upsolved?</th>
+                                        <th>Notes</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="contest-table">
+                                    <tr>
+                                        <td colspan="9" class="text-center">No contests yet</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Daily Log Section -->
+            <div id="daily-section" style="display: none;">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Daily Log</h2>
+                    <button class="btn btn-primary btn-add" data-bs-toggle="modal" data-bs-target="#addDailyModal">
+                        <i class="bi bi-plus"></i> Add Entry
+                    </button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>CF Solved</th>
+                                        <th>AC Solved</th>
+                                        <th>Hours</th>
+                                        <th>Contest?</th>
+                                        <th>Notes</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="daily-table">
+                                    <tr>
+                                        <td colspan="7" class="text-center">No daily logs yet</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mistake Log Section -->
+            <div id="mistakes-section" style="display: none;">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Mistake Log</h2>
+                    <button class="btn btn-primary btn-add" data-bs-toggle="modal" data-bs-target="#addMistakeModal">
+                        <i class="bi bi-plus"></i> Add Mistake
+                    </button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Platform</th>
+                                        <th>Problem</th>
+                                        <th>Mistake Type</th>
+                                        <th>Reason</th>
+                                        <th>Fix Strategy</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="mistake-table">
+                                    <tr>
+                                        <td colspan="7" class="text-center">No mistakes yet</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Topic Practice Section -->
+            <div id="topics-section" style="display: none;">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Topic Practice</h2>
+                    <button class="btn btn-primary btn-add" data-bs-toggle="modal" data-bs-target="#addTopicModal">
+                        <i class="bi bi-plus"></i> Add Topic
+                    </button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Topic</th>
+                                        <th>Solved</th>
+                                        <th>Confidence (1-5)</th>
+                                        <th>Last Practiced</th>
+                                        <th>Notes</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="topic-table">
+                                    <tr>
+                                        <td colspan="6" class="text-center">No topics yet</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Analytics Section -->
+            <div id="analytics-section" style="display: none;">
+                <h2 class="mb-4">Analytics</h2>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                Problems Solved Over Time
+                            </div>
+                            <div class="card-body">
+                                <canvas id="solvedChart" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                Mistake Types
+                            </div>
+                            <div class="card-body">
+                                <canvas id="mistakesChart" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                Topic Confidence Levels
+                            </div>
+                            <div class="card-body">
+                                <canvas id="topicsChart" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Contest Modal -->
+    <div class="modal fade" id="addContestModal" tabindex="-1" aria-labelledby="addContestModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addContestModalLabel">Add Contest</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="contestForm">
+                        <div class="form-group">
+                            <label for="contestDate">Date</label>
+                            <input type="date" class="form-control" id="contestDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contestPlatform">Platform</label>
+                            <select class="form-control" id="contestPlatform" required>
+                                <option value="">Select Platform</option>
+                                <option value="CF">Codeforces (CF)</option>
+                                <option value="AC">AtCoder (AC)</option>
+                                <option value="LC">LeetCode (LC)</option>
+                                <option value="CC">CodeChef (CC)</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="contestName">Contest Name</label>
+                            <input type="text" class="form-control" id="contestName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contestSolved">Problems Solved</label>
+                            <input type="number" class="form-control" id="contestSolved" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contestRating">Rating Change</label>
+                            <input type="number" class="form-control" id="contestRating">
+                        </div>
+                        <div class="form-group">
+                            <label for="contestRank">Rank</label>
+                            <input type="number" class="form-control" id="contestRank">
+                        </div>
+                        <div class="form-group">
+                            <label for="contestUpsolved">Upsolved?</label>
+                            <select class="form-control" id="contestUpsolved">
+                                <option value="">Select</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="contestNotes">Notes</label>
+                            <textarea class="form-control" id="contestNotes" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveContest">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Daily Log Modal -->
+    <div class="modal fade" id="addDailyModal" tabindex="-1" aria-labelledby="addDailyModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addDailyModalLabel">Add Daily Log</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="dailyForm">
+                        <div class="form-group">
+                            <label for="dailyDate">Date</label>
+                            <input type="date" class="form-control" id="dailyDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dailyCfSolved">CF Problems Solved</label>
+                            <input type="number" class="form-control" id="dailyCfSolved">
+                        </div>
+                        <div class="form-group">
+                            <label for="dailyAcSolved">AC Problems Solved</label>
+                            <input type="number" class="form-control" id="dailyAcSolved">
+                        </div>
+                        <div class="form-group">
+                            <label for="dailyHours">Hours Practiced</label>
+                            <input type="number" step="0.1" class="form-control" id="dailyHours">
+                        </div>
+                        <div class="form-group">
+                            <label for="dailyContest">Contest?</label>
+                            <select class="form-control" id="dailyContest">
+                                <option value="">Select</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dailyNotes">Notes</label>
+                            <textarea class="form-control" id="dailyNotes" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveDaily">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Mistake Modal -->
+    <div class="modal fade" id="addMistakeModal" tabindex="-1" aria-labelledby="addMistakeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addMistakeModalLabel">Add Mistake</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="mistakeForm">
+                        <div class="form-group">
+                            <label for="mistakeDate">Date</label>
+                            <input type="date" class="form-control" id="mistakeDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mistakePlatform">Platform</label>
+                            <select class="form-control" id="mistakePlatform" required>
+                                <option value="">Select Platform</option>
+                                <option value="CF">Codeforces (CF)</option>
+                                <option value="AC">AtCoder (AC)</option>
+                                <option value="LC">LeetCode (LC)</option>
+                                <option value="CC">CodeChef (CC)</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="mistakeProblem">Problem</label>
+                            <input type="text" class="form-control" id="mistakeProblem" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mistakeType">Mistake Type</label>
+                            <select class="form-control" id="mistakeType" required>
+                                <option value="">Select Type</option>
+                                <option value="WA">Wrong Answer (WA)</option>
+                                <option value="TLE">Time Limit Exceeded (TLE)</option>
+                                <option value="MLE">Memory Limit Exceeded (MLE)</option>
+                                <option value="RE">Runtime Error (RE)</option>
+                                <option value="CE">Compilation Error (CE)</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="mistakeReason">Reason</label>
+                            <input type="text" class="form-control" id="mistakeReason" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mistakeFix">Fix Strategy</label>
+                            <textarea class="form-control" id="mistakeFix" rows="3" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveMistake">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Topic Modal -->
+    <div class="modal fade" id="addTopicModal" tabindex="-1" aria-labelledby="addTopicModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addTopicModalLabel">Add Topic</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="topicForm">
+                        <div class="form-group">
+                            <label for="topicName">Topic</label>
+                            <input type="text" class="form-control" id="topicName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="topicSolved">Problems Solved</label>
+                            <input type="number" class="form-control" id="topicSolved" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="topicConfidence">Confidence (1-5)</label>
+                            <select class="form-control" id="topicConfidence" required>
+                                <option value="">Select Confidence Level</option>
+                                <option value="1">1 - Very Low</option>
+                                <option value="2">2 - Low</option>
+                                <option value="3">3 - Moderate</option>
+                                <option value="4">4 - High</option>
+                                <option value="5">5 - Very High</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="topicLastPracticed">Last Practiced</label>
+                            <input type="date" class="form-control" id="topicLastPracticed" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="topicNotes">Notes</label>
+                            <textarea class="form-control" id="topicNotes" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveTopic">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Entry</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm">
+                        <input type="hidden" id="editId">
+                        <input type="hidden" id="editType">
+                        <input type="hidden" id="editField">
+                        <div id="editFields"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveEdit">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase and other scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    
+    <script>
+        // Firebase configuration - REPLACE WITH YOUR OWN CONFIG
+       
+const firebaseConfig = {
+  apiKey: "AIzaSyBhDemnqt43w4kJ5Sb1xCghly1yIbMjEfc",
+  authDomain: "cp-tracker-f47ec.firebaseapp.com",
+  databaseURL: "https://cp-tracker-f47ec-default-rtdb.firebaseio.com",
+  projectId: "cp-tracker-f47ec",
+  storageBucket: "cp-tracker-f47ec.firebasestorage.app",
+  messagingSenderId: "635820621186",
+  appId: "1:635820621186:web:058f3e3ab847378cc3239b",
+  measurementId: "G-JVLSXH9QDX"
+};
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const auth = firebase.auth();
+
+        // App data
+        let contests = [];
+        let dailyLogs = [];
+        let mistakes = [];
+        let topics = [];
+        let currentUser = null;
+        let solvedChart, mistakesChart, topicsChart;
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            setupAuth();
+            setupNavigation();
+            setupModals();
+            setupEditFunctionality();
+            setDefaultDates();
+        });
+
+        // Authentication setup
+        function setupAuth() {
+            // Listen for auth state changes
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    // User is signed in
+                    currentUser = user;
+                    document.getElementById('auth-container').style.display = 'none';
+                    document.getElementById('app-container').style.display = 'block';
+                    loadAllData();
+                } else {
+                    // No user is signed in
+                    currentUser = null;
+                    document.getElementById('auth-container').style.display = 'flex';
+                    document.getElementById('app-container').style.display = 'none';
+                }
+            });
+
+            // Login button
+            document.getElementById('login-btn').addEventListener('click', () => {
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const authMessage = document.getElementById('auth-message');
+                
+                authMessage.textContent = '';
+                
+                auth.signInWithEmailAndPassword(email, password)
+                    .catch(error => {
+                        authMessage.textContent = error.message;
+                    });
+            });
+
+            // Signup button
+            document.getElementById('signup-btn').addEventListener('click', () => {
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const authMessage = document.getElementById('auth-message');
+                
+                authMessage.textContent = '';
+                
+                auth.createUserWithEmailAndPassword(email, password)
+                    .catch(error => {
+                        authMessage.textContent = error.message;
+                    });
+            });
+
+            // Logout button
+            document.getElementById('logout-btn').addEventListener('click', () => {
+                auth.signOut();
+            });
+        }
+
+        // Load data from Firebase
+        function loadAllData() {
+            if (!currentUser) return;
+            
+            const userId = currentUser.uid;
+            
+            // Load contests
+            database.ref(`users/${userId}/contests`).on('value', snapshot => {
+                contests = snapshot.val() || [];
+                renderContests();
+                updateDashboardStats();
+            });
+            
+            // Load daily logs
+            database.ref(`users/${userId}/dailyLogs`).on('value', snapshot => {
+                dailyLogs = snapshot.val() || [];
+                renderDailyLogs();
+                updateDashboardStats();
+            });
+            
+            // Load mistakes
+            database.ref(`users/${userId}/mistakes`).on('value', snapshot => {
+                mistakes = snapshot.val() || [];
+                renderMistakes();
+                updateDashboardStats();
+            });
+            
+            // Load topics
+            database.ref(`users/${userId}/topics`).on('value', snapshot => {
+                topics = snapshot.val() || [];
+                renderTopics();
+                updateDashboardStats();
+            });
+        }
+
+        // Save data to Firebase
+        function saveData(type, data) {
+            if (!currentUser) return;
+            const userId = currentUser.uid;
+            database.ref(`users/${userId}/${type}`).set(data);
+        }
+
+        // Navigation setup
+        function setupNavigation() {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Update active link
+                    document.querySelectorAll('.nav-link').forEach(navLink => {
+                        navLink.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    // Hide all sections
+                    document.querySelectorAll('[id$="-section"]').forEach(section => {
+                        section.style.display = 'none';
+                    });
+                    
+                    // Show selected section
+                    const sectionId = this.getAttribute('data-section') + '-section';
+                    document.getElementById(sectionId).style.display = 'block';
+                    
+                    // Update charts when analytics is shown
+                    if (sectionId === 'analytics-section') {
+                        updateCharts();
+                    }
+                });
+            });
+        }
+
+        // Modal setups
+        function setupModals() {
+            // Contest modal
+            document.getElementById('saveContest').addEventListener('click', function() {
+                const newContest = {
+                    id: contests.length > 0 ? Math.max(...contests.map(c => c.id)) + 1 : 1,
+                    date: document.getElementById('contestDate').value,
+                    platform: document.getElementById('contestPlatform').value,
+                    contest_name: document.getElementById('contestName').value,
+                    solved: parseInt(document.getElementById('contestSolved').value) || 0,
+                    rating_change: parseInt(document.getElementById('contestRating').value) || 0,
+                    rank: parseInt(document.getElementById('contestRank').value) || 0,
+                    upsolved: document.getElementById('contestUpsolved').value || '',
+                    notes: document.getElementById('contestNotes').value || ''
+                };
+                
+                contests.push(newContest);
+                saveData('contests', contests);
+                
+                // Reset form and close modal
+                document.getElementById('contestForm').reset();
+                bootstrap.Modal.getInstance(document.getElementById('addContestModal')).hide();
+            });
+            
+            // Daily log modal
+            document.getElementById('saveDaily').addEventListener('click', function() {
+                const newLog = {
+                    id: dailyLogs.length > 0 ? Math.max(...dailyLogs.map(l => l.id)) + 1 : 1,
+                    date: document.getElementById('dailyDate').value,
+                    cf_solved: parseInt(document.getElementById('dailyCfSolved').value) || 0,
+                    ac_solved: parseInt(document.getElementById('dailyAcSolved').value) || 0,
+                    hours: parseFloat(document.getElementById('dailyHours').value) || 0,
+                    contest: document.getElementById('dailyContest').value || '',
+                    notes: document.getElementById('dailyNotes').value || ''
+                };
+                
+                dailyLogs.push(newLog);
+                saveData('dailyLogs', dailyLogs);
+                
+                // Reset form and close modal
+                document.getElementById('dailyForm').reset();
+                bootstrap.Modal.getInstance(document.getElementById('addDailyModal')).hide();
+            });
+            
+            // Mistake modal
+            document.getElementById('saveMistake').addEventListener('click', function() {
+                const newMistake = {
+                    id: mistakes.length > 0 ? Math.max(...mistakes.map(m => m.id)) + 1 : 1,
+                    date: document.getElementById('mistakeDate').value,
+                    platform: document.getElementById('mistakePlatform').value,
+                    problem: document.getElementById('mistakeProblem').value,
+                    mistake_type: document.getElementById('mistakeType').value,
+                    reason: document.getElementById('mistakeReason').value,
+                    fix_strategy: document.getElementById('mistakeFix').value
+                };
+                
+                mistakes.push(newMistake);
+                saveData('mistakes', mistakes);
+                
+                // Reset form and close modal
+                document.getElementById('mistakeForm').reset();
+                bootstrap.Modal.getInstance(document.getElementById('addMistakeModal')).hide();
+            });
+            
+            // Topic modal
+            document.getElementById('saveTopic').addEventListener('click', function() {
+                const newTopic = {
+                    id: topics.length > 0 ? Math.max(...topics.map(t => t.id)) + 1 : 1,
+                    topic: document.getElementById('topicName').value,
+                    solved: parseInt(document.getElementById('topicSolved').value) || 0,
+                    confidence: parseInt(document.getElementById('topicConfidence').value) || 3,
+                    last_practiced: document.getElementById('topicLastPracticed').value,
+                    notes: document.getElementById('topicNotes').value || ''
+                };
+                
+                topics.push(newTopic);
+                saveData('topics', topics);
+                
+                // Reset form and close modal
+                document.getElementById('topicForm').reset();
+                bootstrap.Modal.getInstance(document.getElementById('addTopicModal')).hide();
+            });
+        }
+
+        // Edit functionality
+        function setupEditFunctionality() {
+            // Edit cell click
+            document.addEventListener('click', function(e) {
+                const editable = e.target.closest('.editable');
+                if (!editable) return;
+                
+                const cell = editable;
+                const row = cell.closest('tr');
+                const id = parseInt(row.getAttribute('data-id'));
+                const field = cell.getAttribute('data-field');
+                const currentValue = cell.textContent.trim();
+                const type = row.closest('table').id.split('-')[0];
+                
+                // Set modal title based on type
+                let title = '';
+                if (type === 'contest') title = 'Contest';
+                else if (type === 'daily') title = 'Daily Log';
+                else if (type === 'mistake') title = 'Mistake';
+                else if (type === 'topic') title = 'Topic';
+                
+                document.getElementById('editModalLabel').textContent = `Edit ${title}`;
+                document.getElementById('editId').value = id;
+                document.getElementById('editType').value = type;
+                document.getElementById('editField').value = field;
+                
+                // Create form field based on the cell being edited
+                const editFields = document.getElementById('editFields');
+                editFields.innerHTML = '';
+                
+                let inputHtml = '';
+                let label = field.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+                
+                if (field === 'date' || field === 'last_practiced') {
+                    inputHtml = `
+                        <div class="form-group">
+                            <label for="editValue">${label}</label>
+                            <input type="date" class="form-control" id="editValue" value="${currentValue}">
+                        </div>
+                    `;
+                } else if (field === 'confidence') {
+                    inputHtml = `
+                        <div class="form-group">
+                            <label for="editValue">${label}</label>
+                            <select class="form-control" id="editValue">
+                                <option value="1" ${currentValue === '1' ? 'selected' : ''}>1 - Very Low</option>
+                                <option value="2" ${currentValue === '2' ? 'selected' : ''}>2 - Low</option>
+                                <option value="3" ${currentValue === '3' ? 'selected' : ''}>3 - Moderate</option>
+                                <option value="4" ${currentValue === '4' ? 'selected' : ''}>4 - High</option>
+                                <option value="5" ${currentValue === '5' ? 'selected' : ''}>5 - Very High</option>
+                            </select>
+                        </div>
+                    `;
+                } else if (field === 'contest' || field === 'upsolved') {
+                    inputHtml = `
+                        <div class="form-group">
+                            <label for="editValue">${label}</label>
+                            <select class="form-control" id="editValue">
+                                <option value="">Select</option>
+                                <option value="Yes" ${currentValue === 'Yes' ? 'selected' : ''}>Yes</option>
+                                <option value="No" ${currentValue === 'No' ? 'selected' : ''}>No</option>
+                            </select>
+                        </div>
+                    `;
+                } else if (field === 'platform') {
+                    inputHtml = `
+                        <div class="form-group">
+                            <label for="editValue">${label}</label>
+                            <select class="form-control" id="editValue">
+                                <option value="">Select Platform</option>
+                                <option value="CF" ${currentValue === 'CF' ? 'selected' : ''}>Codeforces (CF)</option>
+                                <option value="AC" ${currentValue === 'AC' ? 'selected' : ''}>AtCoder (AC)</option>
+                                <option value="LC" ${currentValue === 'LC' ? 'selected' : ''}>LeetCode (LC)</option>
+                                <option value="CC" ${currentValue === 'CC' ? 'selected' : ''}>CodeChef (CC)</option>
+                                <option value="Other" ${currentValue === 'Other' ? 'selected' : ''}>Other</option>
+                            </select>
+                        </div>
+                    `;
+                } else if (field === 'mistake_type') {
+                    inputHtml = `
+                        <div class="form-group">
+                            <label for="editValue">${label}</label>
+                            <select class="form-control" id="editValue">
+                                <option value="">Select Type</option>
+                                <option value="WA" ${currentValue === 'WA' ? 'selected' : ''}>Wrong Answer (WA)</option>
+                                <option value="TLE" ${currentValue === 'TLE' ? 'selected' : ''}>Time Limit Exceeded (TLE)</option>
+                                <option value="MLE" ${currentValue === 'MLE' ? 'selected' : ''}>Memory Limit Exceeded (MLE)</option>
+                                <option value="RE" ${currentValue === 'RE' ? 'selected' : ''}>Runtime Error (RE)</option>
+                                <option value="CE" ${currentValue === 'CE' ? 'selected' : ''}>Compilation Error (CE)</option>
+                                <option value="Other" ${currentValue === 'Other' ? 'selected' : ''}>Other</option>
+                            </select>
+                        </div>
+                    `;
+                } else if (field === 'notes' || field === 'fix_strategy') {
+                    inputHtml = `
+                        <div class="form-group">
+                            <label for="editValue">${label}</label>
+                            <textarea class="form-control" id="editValue" rows="3">${currentValue}</textarea>
+                        </div>
+                    `;
+                } else {
+                    inputHtml = `
+                        <div class="form-group">
+                            <label for="editValue">${label}</label>
+                            <input type="${['solved', 'rating_change', 'rank', 'hours', 'cf_solved', 'ac_solved'].includes(field) ? 'number' : 'text'}" 
+                                   class="form-control" id="editValue" value="${currentValue}">
+                        </div>
+                    `;
+                }
+                
+                editFields.innerHTML = inputHtml;
+                
+                // Show modal
+                const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+                editModal.show();
+            });
+            
+            // Save edit
+            document.getElementById('saveEdit').addEventListener('click', function() {
+                const id = parseInt(document.getElementById('editId').value);
+                const type = document.getElementById('editType').value;
+                const field = document.getElementById('editField').value;
+                const newValue = document.getElementById('editValue').value;
+                
+                if (type === 'contest') {
+                    const contest = contests.find(c => c.id === id);
+                    if (contest) {
+                        contest[field] = newValue;
+                        saveData('contests', contests);
+                    }
+                } else if (type === 'daily') {
+                    const log = dailyLogs.find(l => l.id === id);
+                    if (log) {
+                        log[field] = newValue;
+                        saveData('dailyLogs', dailyLogs);
+                    }
+                } else if (type === 'mistake') {
+                    const mistake = mistakes.find(m => m.id === id);
+                    if (mistake) {
+                        mistake[field] = newValue;
+                        saveData('mistakes', mistakes);
+                    }
+                } else if (type === 'topic') {
+                    const topic = topics.find(t => t.id === id);
+                    if (topic) {
+                        topic[field] = newValue;
+                        saveData('topics', topics);
+                    }
+                }
+                
+                bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
+            });
+        }
+
+        // Delete functionality
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('delete-contest') || e.target.closest('.delete-contest')) {
+                const row = e.target.closest('tr');
+                const id = parseInt(row.getAttribute('data-id'));
+                contests = contests.filter(contest => contest.id !== id);
+                saveData('contests', contests);
+            }
+            
+            if (e.target.classList.contains('delete-daily') || e.target.closest('.delete-daily')) {
+                const row = e.target.closest('tr');
+                const id = parseInt(row.getAttribute('data-id'));
+                dailyLogs = dailyLogs.filter(log => log.id !== id);
+                saveData('dailyLogs', dailyLogs);
+            }
+            
+            if (e.target.classList.contains('delete-mistake') || e.target.closest('.delete-mistake')) {
+                const row = e.target.closest('tr');
+                const id = parseInt(row.getAttribute('data-id'));
+                mistakes = mistakes.filter(mistake => mistake.id !== id);
+                saveData('mistakes', mistakes);
+            }
+            
+            if (e.target.classList.contains('delete-topic') || e.target.closest('.delete-topic')) {
+                const row = e.target.closest('tr');
+                const id = parseInt(row.getAttribute('data-id'));
+                topics = topics.filter(topic => topic.id !== id);
+                saveData('topics', topics);
+            }
+        });
+
+        // Set default dates in forms
+        function setDefaultDates() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('contestDate').value = today;
+            document.getElementById('dailyDate').value = today;
+            document.getElementById('mistakeDate').value = today;
+            document.getElementById('topicLastPracticed').value = today;
+        }
+
+        // Render functions
+        function renderContests() {
+            const table = document.getElementById('contest-table');
+            table.innerHTML = '';
+            
+            if (contests.length === 0) {
+                table.innerHTML = '<tr><td colspan="9" class="text-center">No contests yet</td></tr>';
+                return;
+            }
+            
+            contests.forEach(contest => {
+                const row = document.createElement('tr');
+                row.setAttribute('data-id', contest.id);
+                
+                row.innerHTML = `
+                    <td class="editable" data-field="date">${contest.date}</td>
+                    <td class="editable" data-field="platform">${contest.platform}</td>
+                    <td class="editable" data-field="contest_name">${contest.contest_name}</td>
+                    <td class="editable" data-field="solved">${contest.solved}</td>
+                    <td class="editable" data-field="rating_change">${contest.rating_change}</td>
+                    <td class="editable" data-field="rank">${contest.rank}</td>
+                    <td class="editable" data-field="upsolved">${contest.upsolved}</td>
+                    <td class="editable" data-field="notes">${contest.notes}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger delete-contest"><i class="bi bi-trash"></i></button>
+                    </td>
+                `;
+                
+                table.appendChild(row);
+            });
+            
+            updateDashboardStats();
+        }
+        
+        function renderDailyLogs() {
+            const table = document.getElementById('daily-table');
+            table.innerHTML = '';
+            
+            if (dailyLogs.length === 0) {
+                table.innerHTML = '<tr><td colspan="7" class="text-center">No daily logs yet</td></tr>';
+                return;
+            }
+            
+            dailyLogs.forEach(log => {
+                const row = document.createElement('tr');
+                row.setAttribute('data-id', log.id);
+                
+                row.innerHTML = `
+                    <td class="editable" data-field="date">${log.date}</td>
+                    <td class="editable" data-field="cf_solved">${log.cf_solved || ''}</td>
+                    <td class="editable" data-field="ac_solved">${log.ac_solved || ''}</td>
+                    <td class="editable" data-field="hours">${log.hours || ''}</td>
+                    <td class="editable" data-field="contest">${log.contest || ''}</td>
+                    <td class="editable" data-field="notes">${log.notes || ''}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger delete-daily"><i class="bi bi-trash"></i></button>
+                    </td>
+                `;
+                
+                table.appendChild(row);
+            });
+            
+            updateDashboardStats();
+        }
+        
+        function renderMistakes() {
+            const table = document.getElementById('mistake-table');
+            table.innerHTML = '';
+            
+            if (mistakes.length === 0) {
+                table.innerHTML = '<tr><td colspan="7" class="text-center">No mistakes yet</td></tr>';
+                return;
+            }
+            
+            mistakes.forEach(mistake => {
+                const row = document.createElement('tr');
+                row.setAttribute('data-id', mistake.id);
+                
+                row.innerHTML = `
+                    <td class="editable" data-field="date">${mistake.date}</td>
+                    <td class="editable" data-field="platform">${mistake.platform}</td>
+                    <td class="editable" data-field="problem">${mistake.problem}</td>
+                    <td class="editable" data-field="mistake_type">${mistake.mistake_type}</td>
+                    <td class="editable" data-field="reason">${mistake.reason}</td>
+                    <td class="editable" data-field="fix_strategy">${mistake.fix_strategy}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger delete-mistake"><i class="bi bi-trash"></i></button>
+                    </td>
+                `;
+                
+                table.appendChild(row);
+            });
+            
+            updateDashboardStats();
+        }
+        
+        function renderTopics() {
+            const table = document.getElementById('topic-table');
+            table.innerHTML = '';
+            
+            if (topics.length === 0) {
+                table.innerHTML = '<tr><td colspan="6" class="text-center">No topics yet</td></tr>';
+                return;
+            }
+            
+            topics.forEach(topic => {
+                const row = document.createElement('tr');
+                row.setAttribute('data-id', topic.id);
+                
+                row.innerHTML = `
+                    <td class="editable" data-field="topic">${topic.topic}</td>
+                    <td class="editable" data-field="solved">${topic.solved}</td>
+                    <td class="editable" data-field="confidence">${topic.confidence}</td>
+                    <td class="editable" data-field="last_practiced">${topic.last_practiced}</td>
+                    <td class="editable" data-field="notes">${topic.notes || ''}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger delete-topic"><i class="bi bi-trash"></i></button>
+                    </td>
+                `;
+                
+                table.appendChild(row);
+            });
+            
+            updateDashboardStats();
+        }
+
+        // Update dashboard stats
+        function updateDashboardStats() {
+            // Total contests
+            document.getElementById('total-contests').textContent = contests.length;
+            
+            // Total problems solved
+            const contestSolved = contests.reduce((sum, contest) => sum + (parseInt(contest.solved) || 0), 0);
+            const dailySolved = dailyLogs.reduce((sum, log) => sum + (parseInt(log.cf_solved) || 0) + (parseInt(log.ac_solved) || 0), 0);
+            document.getElementById('total-solved').textContent = contestSolved + dailySolved;
+            
+            // Total mistakes
+            document.getElementById('total-mistakes').textContent = mistakes.length;
+            
+            // Total topics
+            document.getElementById('total-topics').textContent = topics.length;
+            
+            // Recent contests
+            const recentContests = document.getElementById('recent-contests');
+            recentContests.innerHTML = '';
+            
+            if (contests.length === 0) {
+                recentContests.innerHTML = '<tr><td colspan="4" class="text-center">No contests yet</td></tr>';
+            } else {
+                contests.slice(0, 5).forEach(contest => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${contest.date}</td>
+                        <td>${contest.contest_name}</td>
+                        <td>${contest.solved}</td>
+                        <td>${contest.rating_change > 0 ? '+' : ''}${contest.rating_change}</td>
+                    `;
+                    recentContests.appendChild(row);
+                });
+            }
+            
+            // Recent mistakes
+            const recentMistakes = document.getElementById('recent-mistakes');
+            recentMistakes.innerHTML = '';
+            
+            if (mistakes.length === 0) {
+                recentMistakes.innerHTML = '<tr><td colspan="3" class="text-center">No mistakes yet</td></tr>';
+            } else {
+                mistakes.slice(0, 5).forEach(mistake => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${mistake.date}</td>
+                        <td>${mistake.problem}</td>
+                        <td>${mistake.reason}</td>
+                    `;
+                    recentMistakes.appendChild(row);
+                });
+            }
+            
+            // Topics to improve
+            const topicsToImprove = document.getElementById('topics-to-improve');
+            topicsToImprove.innerHTML = '';
+            
+            if (topics.length === 0) {
+                topicsToImprove.innerHTML = '<tr><td colspan="4" class="text-center">No topics yet</td></tr>';
+            } else {
+                // Sort by confidence (lowest first) and take top 5
+                const sortedTopics = [...topics].sort((a, b) => a.confidence - b.confidence).slice(0, 5);
+                
+                sortedTopics.forEach(topic => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${topic.topic}</td>
+                        <td>${topic.confidence}/5</td>
+                        <td>${topic.last_practiced}</td>
+                        <td>${topic.notes || ''}</td>
+                    `;
+                    topicsToImprove.appendChild(row);
+                });
+            }
+        }
+
+        // Update charts
+        function updateCharts() {
+            // Problems Solved Over Time
+            const solvedCtx = document.getElementById('solvedChart').getContext('2d');
+            
+            if (solvedChart) solvedChart.destroy();
+            
+            // Group by month
+            const monthlyData = {};
+            const now = new Date();
+            
+            // Initialize last 6 months
+            for (let i = 5; i >= 0; i--) {
+                const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                monthlyData[monthKey] = 0;
+            }
+            
+            // Count problems solved from contests
+            contests.forEach(contest => {
+                const date = new Date(contest.date);
+                const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                
+                if (monthlyData.hasOwnProperty(monthKey)) {
+                    monthlyData[monthKey] += parseInt(contest.solved) || 0;
+                }
+            });
+            
+            // Count problems solved from daily logs
+            dailyLogs.forEach(log => {
+                if (!log.date) return;
+                
+                const date = new Date(log.date);
+                const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                
+                if (monthlyData.hasOwnProperty(monthKey)) {
+                    monthlyData[monthKey] += (parseInt(log.cf_solved) || 0) + (parseInt(log.ac_solved) || 0);
+                }
+            });
+            
+            solvedChart = new Chart(solvedCtx, {
+                type: 'line',
+                data: {
+                    labels: Object.keys(monthlyData),
+                    datasets: [{
+                        label: 'Problems Solved',
+                        data: Object.values(monthlyData),
+                        backgroundColor: 'rgba(0, 123, 255, 0.2)',
+                        borderColor: 'rgba(0, 123, 255, 1)',
+                        borderWidth: 2,
+                        tension: 0.1,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            // Mistake Types
+            const mistakesCtx = document.getElementById('mistakesChart').getContext('2d');
+            
+            if (mistakesChart) mistakesChart.destroy();
+            
+            // Count mistake types
+            const mistakeTypes = {};
+            mistakes.forEach(mistake => {
+                const type = mistake.mistake_type || 'Other';
+                mistakeTypes[type] = (mistakeTypes[type] || 0) + 1;
+            });
+            
+            mistakesChart = new Chart(mistakesCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(mistakeTypes),
+                    datasets: [{
+                        data: Object.values(mistakeTypes),
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.7)',
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(255, 206, 86, 0.7)',
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(153, 102, 255, 0.7)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+            
+            // Topic Confidence
+            const topicsCtx = document.getElementById('topicsChart').getContext('2d');
+            
+            if (topicsChart) topicsChart.destroy();
+            
+            // Prepare topic data
+            const topicData = {};
+            topics.forEach(topic => {
+                topicData[topic.topic] = parseInt(topic.confidence) || 3;
+            });
+            
+            topicsChart = new Chart(topicsCtx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(topicData),
+                    datasets: [{
+                        label: 'Confidence (1-5)',
+                        data: Object.values(topicData),
+                        backgroundColor: 'rgba(111, 66, 193, 0.7)',
+                        borderColor: 'rgba(111, 66, 193, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 5
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
