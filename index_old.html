@@ -114,40 +114,6 @@
             border: 1px solid #ddd;
             border-radius: 5px;
         }
-        .progress {
-            height: 20px;
-        }
-        .task-card {
-            transition: all 0.3s;
-        }
-        .task-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-        }
-        .completed-task {
-            opacity: 0.7;
-            background-color: #f8f9fa;
-        }
-        .recent-item {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-        }
-        .recent-item:last-child {
-            border-bottom: none;
-        }
-        .topic-to-improve {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .topic-to-improve:last-child {
-            border-bottom: none;
-        }
-        .confidence-stars {
-            color: #ffc107;
-        }
     </style>
 </head>
 <body>
@@ -177,11 +143,6 @@
                     <li class="nav-item">
                         <a class="nav-link active" href="#" data-section="dashboard">
                             <i class="bi bi-speedometer2"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-section="tasks">
-                            <i class="bi bi-list-check"></i> Task Manager
                         </a>
                     </li>
                     <li class="nav-item">
@@ -255,100 +216,86 @@
                     </div>
                 </div>
                 
-                <div class="row mt-4">
-                    <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-6">
                         <div class="card">
-                            <div class="card-header">
-                                Active Tasks
-                            </div>
-                            <div class="card-body">
-                                <div id="active-tasks">
-                                    <!-- Active tasks will appear here -->
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card mt-4">
                             <div class="card-header">
                                 Recent Contests
                             </div>
-                            <div class="card-body p-0">
-                                <div id="recent-contests">
-                                    <!-- Recent contests will appear here -->
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Contest</th>
+                                                <th>Solved</th>
+                                                <th>Rating Δ</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="recent-contests">
+                                            <tr>
+                                                <td colspan="4" class="text-center">No contests yet</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="col-md-4">
-                        <div class="card mt-4">
+                    <div class="col-md-6">
+                        <div class="card">
                             <div class="card-header">
                                 Recent Mistakes
                             </div>
-                            <div class="card-body p-0">
-                                <div id="recent-mistakes">
-                                    <!-- Recent mistakes will appear here -->
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Problem</th>
+                                                <th>Mistake</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="recent-mistakes">
+                                            <tr>
+                                                <td colspan="3" class="text-center">No mistakes yet</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="col-md-4">
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
                                 Topics to Improve
                             </div>
-                            <div class="card-body p-0">
-                                <div id="topics-to-improve">
-                                    <!-- Topics to improve will appear here -->
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Topic</th>
+                                                <th>Confidence</th>
+                                                <th>Last Practiced</th>
+                                                <th>Notes</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="topics-to-improve">
+                                            <tr>
+                                                <td colspan="4" class="text-center">No topics yet</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Task Manager Section -->
-            <div id="tasks-section" style="display: none;">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2>Task Manager</h2>
-                    <button class="btn btn-primary" id="add-task-btn">
-                        <i class="bi bi-plus"></i> Add New Task
-                    </button>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <ul class="nav nav-tabs card-header-tabs">
-                            <li class="nav-item">
-                                <a class="nav-link active" href="#" data-task-tab="all">All Tasks</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-task-tab="active">Active</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-task-tab="completed">Completed</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Task Name</th>
-                                        <th>Type</th>
-                                        <th>Progress</th>
-                                        <th>Priority</th>
-                                        <th>Due Date</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="task-table">
-                                    <!-- Tasks will appear here -->
-                                </tbody>
-                            </table>
                         </div>
                     </div>
                 </div>
@@ -381,7 +328,9 @@
                                     </tr>
                                 </thead>
                                 <tbody id="contest-table">
-                                    <!-- Contests will appear here -->
+                                    <tr>
+                                        <td colspan="9" class="text-center">No contests yet</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -414,7 +363,9 @@
                                     </tr>
                                 </thead>
                                 <tbody id="daily-table">
-                                    <!-- Daily logs will appear here -->
+                                    <tr>
+                                        <td colspan="7" class="text-center">No daily logs yet</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -447,7 +398,9 @@
                                     </tr>
                                 </thead>
                                 <tbody id="mistake-table">
-                                    <!-- Mistakes will appear here -->
+                                    <tr>
+                                        <td colspan="7" class="text-center">No mistakes yet</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -479,90 +432,55 @@
                                     </tr>
                                 </thead>
                                 <tbody id="topic-table">
-                                    <!-- Topics will appear here -->
+                                    <tr>
+                                        <td colspan="6" class="text-center">No topics yet</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
-
+            
             <!-- Analytics Section -->
             <div id="analytics-section" style="display: none;">
                 <h2 class="mb-4">Analytics</h2>
-                <div class="card">
-                    <div class="card-header">
-                        Performance Overview
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                Problems Solved Over Time
+                            </div>
+                            <div class="card-body">
                                 <canvas id="solvedChart" height="300"></canvas>
                             </div>
-                            <div class="col-md-6">
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                Mistake Types
+                            </div>
+                            <div class="card-body">
                                 <canvas id="mistakesChart" height="300"></canvas>
                             </div>
                         </div>
-                        <div class="row mt-4">
-                            <div class="col-md-12">
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                Topic Confidence Levels
+                            </div>
+                            <div class="card-body">
                                 <canvas id="topicsChart" height="300"></canvas>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Add Task Modal -->
-    <div class="modal fade" id="taskModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Add New Task</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="taskForm">
-                        <div class="mb-3">
-                            <label class="form-label">Task Name</label>
-                            <input type="text" class="form-control" id="taskName" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Task Type</label>
-                            <select class="form-select" id="taskType" required>
-                                <option value="problem-solving">Problem Solving</option>
-                                <option value="topic-learning">Topic Learning</option>
-                                <option value="contest-prep">Contest Preparation</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Target (Problems/Topics)</label>
-                            <input type="number" class="form-control" id="taskTarget" min="1" value="1">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Priority</label>
-                            <select class="form-select" id="taskPriority">
-                                <option value="1">⭐ Low</option>
-                                <option value="2">⭐⭐ Medium</option>
-                                <option value="3" selected>⭐⭐⭐ High</option>
-                                <option value="4">⭐⭐⭐⭐ Urgent</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Due Date</label>
-                            <input type="date" class="form-control" id="taskDueDate">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Topic (if applicable)</label>
-                            <input type="text" class="form-control" id="taskTopic" placeholder="e.g., Dynamic Programming">
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveTask">Save Task</button>
                 </div>
             </div>
         </div>
@@ -817,7 +735,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
     
     <script>
-  const firebaseConfig = {
+        // Firebase configuration - REPLACE WITH YOUR OWN CONFIG
+       
+const firebaseConfig = {
   apiKey: "AIzaSyBhDemnqt43w4kJ5Sb1xCghly1yIbMjEfc",
   authDomain: "cp-tracker-f47ec.firebaseapp.com",
   databaseURL: "https://cp-tracker-f47ec-default-rtdb.firebaseio.com",
@@ -838,7 +758,6 @@
         let dailyLogs = [];
         let mistakes = [];
         let topics = [];
-        let tasks = [];
         let currentUser = null;
         let solvedChart, mistakesChart, topicsChart;
 
@@ -848,7 +767,6 @@
             setupNavigation();
             setupModals();
             setupEditFunctionality();
-            setupTaskManager();
             setDefaultDates();
         });
 
@@ -915,8 +833,6 @@
                 contests = snapshot.val() || [];
                 renderContests();
                 updateDashboardStats();
-                updateRecentContests();
-                updateCharts();
             });
             
             // Load daily logs
@@ -924,7 +840,6 @@
                 dailyLogs = snapshot.val() || [];
                 renderDailyLogs();
                 updateDashboardStats();
-                updateCharts();
             });
             
             // Load mistakes
@@ -932,23 +847,12 @@
                 mistakes = snapshot.val() || [];
                 renderMistakes();
                 updateDashboardStats();
-                updateRecentMistakes();
-                updateCharts();
             });
             
             // Load topics
             database.ref(`users/${userId}/topics`).on('value', snapshot => {
                 topics = snapshot.val() || [];
                 renderTopics();
-                updateDashboardStats();
-                updateTopicsToImprove();
-                updateCharts();
-            });
-            
-            // Load tasks
-            database.ref(`users/${userId}/tasks`).on('value', snapshot => {
-                tasks = snapshot.val() || [];
-                renderTasks();
                 updateDashboardStats();
             });
         }
@@ -981,722 +885,12 @@
                     const sectionId = this.getAttribute('data-section') + '-section';
                     document.getElementById(sectionId).style.display = 'block';
                     
-                    // Update charts when analytics section is shown
+                    // Update charts when analytics is shown
                     if (sectionId === 'analytics-section') {
                         updateCharts();
                     }
                 });
             });
-        }
-
-        // Task Manager Setup
-        function setupTaskManager() {
-            // Add Task Button
-            document.getElementById('add-task-btn').addEventListener('click', function() {
-                // Reset form and set default date to today
-                document.getElementById('taskForm').reset();
-                document.getElementById('taskDueDate').value = new Date().toISOString().split('T')[0];
-                document.getElementById('saveTask').textContent = 'Save Task';
-                document.getElementById('saveTask').onclick = saveNewTask;
-                
-                const modal = new bootstrap.Modal(document.getElementById('taskModal'));
-                modal.show();
-            });
-
-            // Save Task
-            function saveNewTask() {
-                const newTask = {
-                    id: tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1,
-                    name: document.getElementById('taskName').value,
-                    type: document.getElementById('taskType').value,
-                    target: parseInt(document.getElementById('taskTarget').value) || 1,
-                    completed: 0,
-                    priority: parseInt(document.getElementById('taskPriority').value) || 3,
-                    dueDate: document.getElementById('taskDueDate').value,
-                    topic: document.getElementById('taskTopic').value || '',
-                    status: 'pending',
-                    createdAt: new Date().toISOString()
-                };
-                
-                tasks.push(newTask);
-                saveData('tasks', tasks);
-                
-                // Close modal
-                bootstrap.Modal.getInstance(document.getElementById('taskModal')).hide();
-            }
-
-            // Task tab navigation
-            document.querySelectorAll('[data-task-tab]').forEach(tab => {
-                tab.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    // Update active tab
-                    document.querySelectorAll('[data-task-tab]').forEach(t => {
-                        t.classList.remove('active');
-                    });
-                    this.classList.add('active');
-                    
-                    // Filter tasks
-                    const tab = this.getAttribute('data-task-tab');
-                    renderTasks(tab);
-                });
-            });
-        }
-
-        // Render tasks with optional filtering
-        function renderTasks(filter = 'all') {
-            const table = document.getElementById('task-table');
-            table.innerHTML = '';
-            
-            let filteredTasks = tasks;
-            
-            // Apply filter
-            if (filter === 'active') {
-                filteredTasks = tasks.filter(t => t.status !== 'completed');
-            } else if (filter === 'completed') {
-                filteredTasks = tasks.filter(t => t.status === 'completed');
-            }
-            
-            if (filteredTasks.length === 0) {
-                table.innerHTML = '<tr><td colspan="7" class="text-center">No tasks found</td></tr>';
-                return;
-            }
-            
-            // Sort tasks by priority and due date
-            filteredTasks.sort((a, b) => {
-                if (a.priority !== b.priority) return b.priority - a.priority;
-                if (!a.dueDate && !b.dueDate) return 0;
-                if (!a.dueDate) return 1;
-                if (!b.dueDate) return -1;
-                return new Date(a.dueDate) - new Date(b.dueDate);
-            });
-            
-            filteredTasks.forEach(task => {
-                const row = document.createElement('tr');
-                row.setAttribute('data-id', task.id);
-                
-                if (task.status === 'completed') {
-                    row.classList.add('completed-task');
-                }
-                
-                // Calculate progress
-                const progress = task.completed / task.target * 100;
-                const progressColor = progress >= 100 ? 'bg-success' : 
-                                    progress >= 50 ? 'bg-primary' : 'bg-warning';
-                
-                // Format due date
-                let dueDateDisplay = task.dueDate || 'No deadline';
-                if (task.dueDate) {
-                    const dueDate = new Date(task.dueDate);
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-                    
-                    if (dueDate < today && task.status !== 'completed') {
-                        dueDateDisplay = `<span class="text-danger">${task.dueDate} (Overdue)</span>`;
-                    } else {
-                        dueDateDisplay = task.dueDate;
-                    }
-                }
-                
-                row.innerHTML = `
-                    <td>${task.name} ${task.topic ? `<br><small class="text-muted">Topic: ${task.topic}</small>` : ''}</td>
-                    <td>${formatTaskType(task.type)}</td>
-                    <td>
-                        <div class="progress" style="height: 20px;">
-                            <div class="progress-bar ${progressColor}" role="progressbar" 
-                                style="width: ${progress}%" aria-valuenow="${progress}" 
-                                aria-valuemin="0" aria-valuemax="100">
-                                ${task.completed}/${task.target}
-                            </div>
-                        </div>
-                    </td>
-                    <td>${'⭐'.repeat(task.priority)}</td>
-                    <td>${dueDateDisplay}</td>
-                    <td>
-                        <select class="form-select form-select-sm task-status" data-id="${task.id}">
-                            <option value="pending" ${task.status === 'pending' ? 'selected' : ''}>Pending</option>
-                            <option value="in-progress" ${task.status === 'in-progress' ? 'selected' : ''}>In Progress</option>
-                            <option value="completed" ${task.status === 'completed' ? 'selected' : ''}>Completed</option>
-                        </select>
-                    </td>
-                    <td>
-                        <div class="btn-group btn-group-sm">
-                            <button class="btn btn-success increment-task" data-id="${task.id}" title="Add +1" ${task.status === 'completed' ? 'disabled' : ''}>
-                                <i class="bi bi-plus"></i>
-                            </button>
-                            <button class="btn btn-warning decrement-task" data-id="${task.id}" title="Subtract -1" ${task.completed === 0 ? 'disabled' : ''}>
-                                <i class="bi bi-dash"></i>
-                            </button>
-                            <button class="btn btn-primary edit-task" data-id="${task.id}" title="Edit">
-                                <i class="bi bi-pencil"></i>
-                            </button>
-                            <button class="btn btn-danger delete-task" data-id="${task.id}" title="Delete">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                `;
-                
-                table.appendChild(row);
-            });
-            
-            // Add event listeners
-            document.querySelectorAll('.increment-task').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const taskId = parseInt(this.getAttribute('data-id'));
-                    const task = tasks.find(t => t.id === taskId);
-                    if (task && task.completed < task.target) {
-                        task.completed++;
-                        if (task.completed >= task.target) {
-                            task.status = 'completed';
-                        }
-                        saveData('tasks', tasks);
-                    }
-                });
-            });
-            
-            document.querySelectorAll('.decrement-task').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const taskId = parseInt(this.getAttribute('data-id'));
-                    const task = tasks.find(t => t.id === taskId);
-                    if (task && task.completed > 0) {
-                        task.completed--;
-                        if (task.completed < task.target) {
-                            task.status = 'in-progress';
-                        }
-                        saveData('tasks', tasks);
-                    }
-                });
-            });
-            
-            document.querySelectorAll('.delete-task').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const taskId = parseInt(this.getAttribute('data-id'));
-                    tasks = tasks.filter(t => t.id !== taskId);
-                    saveData('tasks', tasks);
-                });
-            });
-            
-            document.querySelectorAll('.edit-task').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const taskId = parseInt(this.getAttribute('data-id'));
-                    const task = tasks.find(t => t.id === taskId);
-                    if (task) {
-                        // Populate the task form
-                        document.getElementById('taskName').value = task.name;
-                        document.getElementById('taskType').value = task.type;
-                        document.getElementById('taskTarget').value = task.target;
-                        document.getElementById('taskPriority').value = task.priority;
-                        document.getElementById('taskDueDate').value = task.dueDate;
-                        document.getElementById('taskTopic').value = task.topic || '';
-                        
-                        // Change save button to update
-                        document.getElementById('saveTask').textContent = 'Update Task';
-                        document.getElementById('saveTask').onclick = function() {
-                            task.name = document.getElementById('taskName').value;
-                            task.type = document.getElementById('taskType').value;
-                            task.target = parseInt(document.getElementById('taskTarget').value) || 1;
-                            task.priority = parseInt(document.getElementById('taskPriority').value) || 3;
-                            task.dueDate = document.getElementById('taskDueDate').value;
-                            task.topic = document.getElementById('taskTopic').value || '';
-                            
-                            saveData('tasks', tasks);
-                            bootstrap.Modal.getInstance(document.getElementById('taskModal')).hide();
-                        };
-                        
-                        // Show the modal
-                        const modal = new bootstrap.Modal(document.getElementById('taskModal'));
-                        modal.show();
-                    }
-                });
-            });
-            
-            document.querySelectorAll('.task-status').forEach(select => {
-                select.addEventListener('change', function() {
-                    const taskId = parseInt(this.getAttribute('data-id'));
-                    const task = tasks.find(t => t.id === taskId);
-                    if (task) {
-                        task.status = this.value;
-                        if (this.value === 'completed' && task.completed < task.target) {
-                            task.completed = task.target;
-                        }
-                        saveData('tasks', tasks);
-                    }
-                });
-            });
-            
-            // Update active tasks in dashboard
-            updateActiveTasks();
-        }
-
-        function formatTaskType(type) {
-            const types = {
-                'problem-solving': 'Problem Solving',
-                'topic-learning': 'Topic Learning',
-                'contest-prep': 'Contest Prep',
-                'other': 'Other'
-            };
-            return types[type] || type;
-        }
-
-        function updateActiveTasks() {
-            const activeTasksContainer = document.getElementById('active-tasks');
-            activeTasksContainer.innerHTML = '';
-            
-            const activeTasks = tasks.filter(t => t.status !== 'completed').slice(0, 5);
-            
-            if (activeTasks.length === 0) {
-                activeTasksContainer.innerHTML = '<div class="text-center text-muted">No active tasks</div>';
-                return;
-            }
-            
-            activeTasks.forEach(task => {
-                const progress = task.completed / task.target * 100;
-                const progressColor = progress >= 100 ? 'bg-success' : 
-                                    progress >= 50 ? 'bg-primary' : 'bg-warning';
-                
-                const taskEl = document.createElement('div');
-                taskEl.className = 'card mb-2 task-card';
-                taskEl.innerHTML = `
-                    <div class="card-body">
-                        <h6 class="card-title">${task.name}</h6>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <small class="text-muted">${formatTaskType(task.type)}</small>
-                                ${task.topic ? `<br><small class="text-muted">Topic: ${task.topic}</small>` : ''}
-                            </div>
-                            <div>
-                                <span class="badge bg-${task.priority >= 3 ? 'danger' : 'warning'}">
-                                    ${'⭐'.repeat(task.priority)}
-                                </span>
-                            </div>
-                        </div>
-                        <div class="progress mt-2" style="height: 10px;">
-                            <div class="progress-bar ${progressColor}" 
-                                style="width: ${progress}%"></div>
-                        </div>
-                        <div class="d-flex justify-content-between mt-2">
-                            <small>${task.completed}/${task.target}</small>
-                            <small>${task.dueDate ? `Due: ${task.dueDate}` : 'No deadline'}</small>
-                        </div>
-                    </div>
-                `;
-                
-                activeTasksContainer.appendChild(taskEl);
-            });
-        }
-
-        // Update recent contests
-        function updateRecentContests() {
-            const container = document.getElementById('recent-contests');
-            container.innerHTML = '';
-            
-            if (contests.length === 0) {
-                container.innerHTML = '<div class="text-center text-muted p-3">No contests yet</div>';
-                return;
-            }
-            
-            // Sort by date descending and take first 5
-            const recentContests = [...contests]
-                .sort((a, b) => new Date(b.date) - new Date(a.date))
-                .slice(0, 5);
-            
-            recentContests.forEach(contest => {
-                const item = document.createElement('div');
-                item.className = 'recent-item';
-                
-                // Format rating change with color
-                let ratingChange = contest.rating_change || 0;
-                let ratingClass = ratingChange > 0 ? 'text-success' : ratingChange < 0 ? 'text-danger' : 'text-muted';
-                let ratingDisplay = ratingChange > 0 ? `+${ratingChange}` : ratingChange;
-                
-                item.innerHTML = `
-                    <div class="d-flex justify-content-between">
-                        <strong>${contest.contest_name}</strong>
-                        <span class="badge bg-secondary">${contest.platform}</span>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <small>${contest.date}</small>
-                        <small class="${ratingClass}">${ratingDisplay}</small>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <small>Solved: ${contest.solved}</small>
-                        <small>Rank: ${contest.rank || '-'}</small>
-                    </div>
-                `;
-                
-                container.appendChild(item);
-            });
-        }
-
-        // Update recent mistakes
-        function updateRecentMistakes() {
-            const container = document.getElementById('recent-mistakes');
-            container.innerHTML = '';
-            
-            if (mistakes.length === 0) {
-                container.innerHTML = '<div class="text-center text-muted p-3">No mistakes yet</div>';
-                return;
-            }
-            
-            // Sort by date descending and take first 5
-            const recentMistakes = [...mistakes]
-                .sort((a, b) => new Date(b.date) - new Date(a.date))
-                .slice(0, 5);
-            
-            recentMistakes.forEach(mistake => {
-                const item = document.createElement('div');
-                item.className = 'recent-item';
-                
-                item.innerHTML = `
-                    <div class="d-flex justify-content-between">
-                        <strong>${mistake.problem}</strong>
-                        <span class="badge bg-secondary">${mistake.platform}</span>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <small>${mistake.date}</small>
-                        <small class="text-danger">${mistake.mistake_type}</small>
-                    </div>
-                    <div><small>${mistake.reason}</small></div>
-                `;
-                
-                container.appendChild(item);
-            });
-        }
-
-        // Update topics to improve
-        function updateTopicsToImprove() {
-            const container = document.getElementById('topics-to-improve');
-            container.innerHTML = '';
-            
-            if (topics.length === 0) {
-                container.innerHTML = '<div class="text-center text-muted p-3">No topics yet</div>';
-                return;
-            }
-            
-            // Filter topics with confidence <= 3 and sort by confidence ascending
-            const topicsToImprove = [...topics]
-                .filter(topic => topic.confidence <= 3)
-                .sort((a, b) => a.confidence - b.confidence)
-                .slice(0, 5);
-            
-            if (topicsToImprove.length === 0) {
-                container.innerHTML = '<div class="text-center text-muted p-3">All topics look good!</div>';
-                return;
-            }
-            
-            topicsToImprove.forEach(topic => {
-                const item = document.createElement('div');
-                item.className = 'topic-to-improve';
-                
-                item.innerHTML = `
-                    <div>
-                        <strong>${topic.topic}</strong>
-                        <div class="confidence-stars">
-                            ${'★'.repeat(topic.confidence)}${'☆'.repeat(5 - topic.confidence)}
-                        </div>
-                    </div>
-                    <div>
-                        <small>${topic.solved} solved</small>
-                    </div>
-                `;
-                
-                container.appendChild(item);
-            });
-        }
-
-        // Update charts for analytics
-        function updateCharts() {
-            // Problems solved chart
-            const solvedCtx = document.getElementById('solvedChart').getContext('2d');
-            if (solvedChart) solvedChart.destroy();
-            
-            const solvedData = {
-                labels: ['Codeforces', 'AtCoder', 'LeetCode', 'Other'],
-                datasets: [{
-                    label: 'Problems Solved',
-                    data: [
-                        dailyLogs.reduce((sum, log) => sum + (parseInt(log.cf_solved) || 0), 0),
-                        dailyLogs.reduce((sum, log) => sum + (parseInt(log.ac_solved) || 0), 0),
-                        0, // LeetCode data not tracked in current implementation
-                        0  // Other platforms data not tracked in current implementation
-                    ],
-                    backgroundColor: [
-                        'rgba(54, 162, 235, 0.5)',
-                        'rgba(255, 99, 132, 0.5)',
-                        'rgba(255, 206, 86, 0.5)',
-                        'rgba(75, 192, 192, 0.5)'
-                    ],
-                    borderColor: [
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            };
-            
-            solvedChart = new Chart(solvedCtx, {
-                type: 'bar',
-                data: solvedData,
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: 'Problems Solved by Platform'
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-            
-            // Mistakes chart
-            const mistakesCtx = document.getElementById('mistakesChart').getContext('2d');
-            if (mistakesChart) mistakesChart.destroy();
-            
-            const mistakeTypes = ['WA', 'TLE', 'MLE', 'RE', 'CE', 'Other'];
-            const mistakeCounts = mistakeTypes.map(type => 
-                mistakes.filter(m => m.mistake_type === type).length
-            );
-            
-            mistakesChart = new Chart(mistakesCtx, {
-                type: 'pie',
-                data: {
-                    labels: mistakeTypes,
-                    datasets: [{
-                        label: 'Mistakes by Type',
-                        data: mistakeCounts,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.5)',
-                            'rgba(54, 162, 235, 0.5)',
-                            'rgba(255, 206, 86, 0.5)',
-                            'rgba(75, 192, 192, 0.5)',
-                            'rgba(153, 102, 255, 0.5)',
-                            'rgba(201, 203, 207, 0.5)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(201, 203, 207, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: 'Mistakes by Type'
-                        }
-                    }
-                }
-            });
-            
-            // Topics confidence chart
-            const topicsCtx = document.getElementById('topicsChart').getContext('2d');
-            if (topicsChart) topicsChart.destroy();
-            
-            const confidenceLevels = [1, 2, 3, 4, 5];
-            const topicCounts = confidenceLevels.map(level => 
-                topics.filter(t => t.confidence == level).length
-            );
-            
-            topicsChart = new Chart(topicsCtx, {
-                type: 'line',
-                data: {
-                    labels: confidenceLevels.map(l => `Level ${l}`),
-                    datasets: [{
-                        label: 'Topics by Confidence Level',
-                        data: topicCounts,
-                        fill: false,
-                        backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        tension: 0.1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: 'Topics by Confidence Level'
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        }
-
-        // Render functions for other sections (contests, daily logs, mistakes, topics)
-        function renderContests() {
-            const table = document.getElementById('contest-table');
-            table.innerHTML = '';
-            
-            if (contests.length === 0) {
-                table.innerHTML = '<tr><td colspan="9" class="text-center">No contests yet</td></tr>';
-                return;
-            }
-            
-            contests.forEach(contest => {
-                const row = document.createElement('tr');
-                row.setAttribute('data-id', contest.id);
-                
-                row.innerHTML = `
-                    <td class="editable" data-field="date">${contest.date}</td>
-                    <td class="editable" data-field="platform">${contest.platform}</td>
-                    <td class="editable" data-field="contest_name">${contest.contest_name}</td>
-                    <td class="editable" data-field="solved">${contest.solved}</td>
-                    <td class="editable" data-field="rating_change">${contest.rating_change}</td>
-                    <td class="editable" data-field="rank">${contest.rank}</td>
-                    <td class="editable" data-field="upsolved">${contest.upsolved}</td>
-                    <td class="editable" data-field="notes">${contest.notes}</td>
-                    <td>
-                        <button class="btn btn-sm btn-danger delete-contest"><i class="bi bi-trash"></i></button>
-                    </td>
-                `;
-                
-                table.appendChild(row);
-            });
-            
-            updateDashboardStats();
-            updateRecentContests();
-        }
-        
-        function renderDailyLogs() {
-            const table = document.getElementById('daily-table');
-            table.innerHTML = '';
-            
-            if (dailyLogs.length === 0) {
-                table.innerHTML = '<tr><td colspan="7" class="text-center">No daily logs yet</td></tr>';
-                return;
-            }
-            
-            dailyLogs.forEach(log => {
-                const row = document.createElement('tr');
-                row.setAttribute('data-id', log.id);
-                
-                row.innerHTML = `
-                    <td class="editable" data-field="date">${log.date}</td>
-                    <td class="editable" data-field="cf_solved">${log.cf_solved || ''}</td>
-                    <td class="editable" data-field="ac_solved">${log.ac_solved || ''}</td>
-                    <td class="editable" data-field="hours">${log.hours || ''}</td>
-                    <td class="editable" data-field="contest">${log.contest || ''}</td>
-                    <td class="editable" data-field="notes">${log.notes || ''}</td>
-                    <td>
-                        <button class="btn btn-sm btn-danger delete-daily"><i class="bi bi-trash"></i></button>
-                    </td>
-                `;
-                
-                table.appendChild(row);
-            });
-            
-            updateDashboardStats();
-        }
-        
-        function renderMistakes() {
-            const table = document.getElementById('mistake-table');
-            table.innerHTML = '';
-            
-            if (mistakes.length === 0) {
-                table.innerHTML = '<tr><td colspan="7" class="text-center">No mistakes yet</td></tr>';
-                return;
-            }
-            
-            mistakes.forEach(mistake => {
-                const row = document.createElement('tr');
-                row.setAttribute('data-id', mistake.id);
-                
-                row.innerHTML = `
-                    <td class="editable" data-field="date">${mistake.date}</td>
-                    <td class="editable" data-field="platform">${mistake.platform}</td>
-                    <td class="editable" data-field="problem">${mistake.problem}</td>
-                    <td class="editable" data-field="mistake_type">${mistake.mistake_type}</td>
-                    <td class="editable" data-field="reason">${mistake.reason}</td>
-                    <td class="editable" data-field="fix_strategy">${mistake.fix_strategy}</td>
-                    <td>
-                        <button class="btn btn-sm btn-danger delete-mistake"><i class="bi bi-trash"></i></button>
-                    </td>
-                `;
-                
-                table.appendChild(row);
-            });
-            
-            updateDashboardStats();
-            updateRecentMistakes();
-        }
-        
-        function renderTopics() {
-            const table = document.getElementById('topic-table');
-            table.innerHTML = '';
-            
-            if (topics.length === 0) {
-                table.innerHTML = '<tr><td colspan="6" class="text-center">No topics yet</td></tr>';
-                return;
-            }
-            
-            topics.forEach(topic => {
-                const row = document.createElement('tr');
-                row.setAttribute('data-id', topic.id);
-                
-                row.innerHTML = `
-                    <td class="editable" data-field="topic">${topic.topic}</td>
-                    <td class="editable" data-field="solved">${topic.solved}</td>
-                    <td class="editable" data-field="confidence">${topic.confidence}</td>
-                    <td class="editable" data-field="last_practiced">${topic.last_practiced}</td>
-                    <td class="editable" data-field="notes">${topic.notes || ''}</td>
-                    <td>
-                        <button class="btn btn-sm btn-danger delete-topic"><i class="bi bi-trash"></i></button>
-                    </td>
-                `;
-                
-                table.appendChild(row);
-            });
-            
-            updateDashboardStats();
-            updateTopicsToImprove();
-        }
-
-        // Update dashboard stats
-        function updateDashboardStats() {
-            // Total contests
-            document.getElementById('total-contests').textContent = contests.length;
-            
-            // Total problems solved
-            const contestSolved = contests.reduce((sum, contest) => sum + (parseInt(contest.solved) || 0), 0);
-            const dailySolved = dailyLogs.reduce((sum, log) => sum + (parseInt(log.cf_solved) || 0) + (parseInt(log.ac_solved) || 0), 0);
-            document.getElementById('total-solved').textContent = contestSolved + dailySolved;
-            
-            // Total mistakes
-            document.getElementById('total-mistakes').textContent = mistakes.length;
-            
-            // Total topics
-            document.getElementById('total-topics').textContent = topics.length;
-            
-            // Update active tasks
-            updateActiveTasks();
         }
 
         // Modal setups
@@ -1975,7 +1169,345 @@
             document.getElementById('dailyDate').value = today;
             document.getElementById('mistakeDate').value = today;
             document.getElementById('topicLastPracticed').value = today;
-            document.getElementById('taskDueDate').value = today;
+        }
+
+        // Render functions
+        function renderContests() {
+            const table = document.getElementById('contest-table');
+            table.innerHTML = '';
+            
+            if (contests.length === 0) {
+                table.innerHTML = '<tr><td colspan="9" class="text-center">No contests yet</td></tr>';
+                return;
+            }
+            
+            contests.forEach(contest => {
+                const row = document.createElement('tr');
+                row.setAttribute('data-id', contest.id);
+                
+                row.innerHTML = `
+                    <td class="editable" data-field="date">${contest.date}</td>
+                    <td class="editable" data-field="platform">${contest.platform}</td>
+                    <td class="editable" data-field="contest_name">${contest.contest_name}</td>
+                    <td class="editable" data-field="solved">${contest.solved}</td>
+                    <td class="editable" data-field="rating_change">${contest.rating_change}</td>
+                    <td class="editable" data-field="rank">${contest.rank}</td>
+                    <td class="editable" data-field="upsolved">${contest.upsolved}</td>
+                    <td class="editable" data-field="notes">${contest.notes}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger delete-contest"><i class="bi bi-trash"></i></button>
+                    </td>
+                `;
+                
+                table.appendChild(row);
+            });
+            
+            updateDashboardStats();
+        }
+        
+        function renderDailyLogs() {
+            const table = document.getElementById('daily-table');
+            table.innerHTML = '';
+            
+            if (dailyLogs.length === 0) {
+                table.innerHTML = '<tr><td colspan="7" class="text-center">No daily logs yet</td></tr>';
+                return;
+            }
+            
+            dailyLogs.forEach(log => {
+                const row = document.createElement('tr');
+                row.setAttribute('data-id', log.id);
+                
+                row.innerHTML = `
+                    <td class="editable" data-field="date">${log.date}</td>
+                    <td class="editable" data-field="cf_solved">${log.cf_solved || ''}</td>
+                    <td class="editable" data-field="ac_solved">${log.ac_solved || ''}</td>
+                    <td class="editable" data-field="hours">${log.hours || ''}</td>
+                    <td class="editable" data-field="contest">${log.contest || ''}</td>
+                    <td class="editable" data-field="notes">${log.notes || ''}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger delete-daily"><i class="bi bi-trash"></i></button>
+                    </td>
+                `;
+                
+                table.appendChild(row);
+            });
+            
+            updateDashboardStats();
+        }
+        
+        function renderMistakes() {
+            const table = document.getElementById('mistake-table');
+            table.innerHTML = '';
+            
+            if (mistakes.length === 0) {
+                table.innerHTML = '<tr><td colspan="7" class="text-center">No mistakes yet</td></tr>';
+                return;
+            }
+            
+            mistakes.forEach(mistake => {
+                const row = document.createElement('tr');
+                row.setAttribute('data-id', mistake.id);
+                
+                row.innerHTML = `
+                    <td class="editable" data-field="date">${mistake.date}</td>
+                    <td class="editable" data-field="platform">${mistake.platform}</td>
+                    <td class="editable" data-field="problem">${mistake.problem}</td>
+                    <td class="editable" data-field="mistake_type">${mistake.mistake_type}</td>
+                    <td class="editable" data-field="reason">${mistake.reason}</td>
+                    <td class="editable" data-field="fix_strategy">${mistake.fix_strategy}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger delete-mistake"><i class="bi bi-trash"></i></button>
+                    </td>
+                `;
+                
+                table.appendChild(row);
+            });
+            
+            updateDashboardStats();
+        }
+        
+        function renderTopics() {
+            const table = document.getElementById('topic-table');
+            table.innerHTML = '';
+            
+            if (topics.length === 0) {
+                table.innerHTML = '<tr><td colspan="6" class="text-center">No topics yet</td></tr>';
+                return;
+            }
+            
+            topics.forEach(topic => {
+                const row = document.createElement('tr');
+                row.setAttribute('data-id', topic.id);
+                
+                row.innerHTML = `
+                    <td class="editable" data-field="topic">${topic.topic}</td>
+                    <td class="editable" data-field="solved">${topic.solved}</td>
+                    <td class="editable" data-field="confidence">${topic.confidence}</td>
+                    <td class="editable" data-field="last_practiced">${topic.last_practiced}</td>
+                    <td class="editable" data-field="notes">${topic.notes || ''}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger delete-topic"><i class="bi bi-trash"></i></button>
+                    </td>
+                `;
+                
+                table.appendChild(row);
+            });
+            
+            updateDashboardStats();
+        }
+
+        // Update dashboard stats
+        function updateDashboardStats() {
+            // Total contests
+            document.getElementById('total-contests').textContent = contests.length;
+            
+            // Total problems solved
+            const contestSolved = contests.reduce((sum, contest) => sum + (parseInt(contest.solved) || 0), 0);
+            const dailySolved = dailyLogs.reduce((sum, log) => sum + (parseInt(log.cf_solved) || 0) + (parseInt(log.ac_solved) || 0), 0);
+            document.getElementById('total-solved').textContent = contestSolved + dailySolved;
+            
+            // Total mistakes
+            document.getElementById('total-mistakes').textContent = mistakes.length;
+            
+            // Total topics
+            document.getElementById('total-topics').textContent = topics.length;
+            
+            // Recent contests
+            const recentContests = document.getElementById('recent-contests');
+            recentContests.innerHTML = '';
+            
+            if (contests.length === 0) {
+                recentContests.innerHTML = '<tr><td colspan="4" class="text-center">No contests yet</td></tr>';
+            } else {
+                contests.slice(0, 5).forEach(contest => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${contest.date}</td>
+                        <td>${contest.contest_name}</td>
+                        <td>${contest.solved}</td>
+                        <td>${contest.rating_change > 0 ? '+' : ''}${contest.rating_change}</td>
+                    `;
+                    recentContests.appendChild(row);
+                });
+            }
+            
+            // Recent mistakes
+            const recentMistakes = document.getElementById('recent-mistakes');
+            recentMistakes.innerHTML = '';
+            
+            if (mistakes.length === 0) {
+                recentMistakes.innerHTML = '<tr><td colspan="3" class="text-center">No mistakes yet</td></tr>';
+            } else {
+                mistakes.slice(0, 5).forEach(mistake => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${mistake.date}</td>
+                        <td>${mistake.problem}</td>
+                        <td>${mistake.reason}</td>
+                    `;
+                    recentMistakes.appendChild(row);
+                });
+            }
+            
+            // Topics to improve
+            const topicsToImprove = document.getElementById('topics-to-improve');
+            topicsToImprove.innerHTML = '';
+            
+            if (topics.length === 0) {
+                topicsToImprove.innerHTML = '<tr><td colspan="4" class="text-center">No topics yet</td></tr>';
+            } else {
+                // Sort by confidence (lowest first) and take top 5
+                const sortedTopics = [...topics].sort((a, b) => a.confidence - b.confidence).slice(0, 5);
+                
+                sortedTopics.forEach(topic => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${topic.topic}</td>
+                        <td>${topic.confidence}/5</td>
+                        <td>${topic.last_practiced}</td>
+                        <td>${topic.notes || ''}</td>
+                    `;
+                    topicsToImprove.appendChild(row);
+                });
+            }
+        }
+
+        // Update charts
+        function updateCharts() {
+            // Problems Solved Over Time
+            const solvedCtx = document.getElementById('solvedChart').getContext('2d');
+            
+            if (solvedChart) solvedChart.destroy();
+            
+            // Group by month
+            const monthlyData = {};
+            const now = new Date();
+            
+            // Initialize last 6 months
+            for (let i = 5; i >= 0; i--) {
+                const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                monthlyData[monthKey] = 0;
+            }
+            
+            // Count problems solved from contests
+            contests.forEach(contest => {
+                const date = new Date(contest.date);
+                const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                
+                if (monthlyData.hasOwnProperty(monthKey)) {
+                    monthlyData[monthKey] += parseInt(contest.solved) || 0;
+                }
+            });
+            
+            // Count problems solved from daily logs
+            dailyLogs.forEach(log => {
+                if (!log.date) return;
+                
+                const date = new Date(log.date);
+                const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                
+                if (monthlyData.hasOwnProperty(monthKey)) {
+                    monthlyData[monthKey] += (parseInt(log.cf_solved) || 0) + (parseInt(log.ac_solved) || 0);
+                }
+            });
+            
+            solvedChart = new Chart(solvedCtx, {
+                type: 'line',
+                data: {
+                    labels: Object.keys(monthlyData),
+                    datasets: [{
+                        label: 'Problems Solved',
+                        data: Object.values(monthlyData),
+                        backgroundColor: 'rgba(0, 123, 255, 0.2)',
+                        borderColor: 'rgba(0, 123, 255, 1)',
+                        borderWidth: 2,
+                        tension: 0.1,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            // Mistake Types
+            const mistakesCtx = document.getElementById('mistakesChart').getContext('2d');
+            
+            if (mistakesChart) mistakesChart.destroy();
+            
+            // Count mistake types
+            const mistakeTypes = {};
+            mistakes.forEach(mistake => {
+                const type = mistake.mistake_type || 'Other';
+                mistakeTypes[type] = (mistakeTypes[type] || 0) + 1;
+            });
+            
+            mistakesChart = new Chart(mistakesCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(mistakeTypes),
+                    datasets: [{
+                        data: Object.values(mistakeTypes),
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.7)',
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(255, 206, 86, 0.7)',
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(153, 102, 255, 0.7)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+            
+            // Topic Confidence
+            const topicsCtx = document.getElementById('topicsChart').getContext('2d');
+            
+            if (topicsChart) topicsChart.destroy();
+            
+            // Prepare topic data
+            const topicData = {};
+            topics.forEach(topic => {
+                topicData[topic.topic] = parseInt(topic.confidence) || 3;
+            });
+            
+            topicsChart = new Chart(topicsCtx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(topicData),
+                    datasets: [{
+                        label: 'Confidence (1-5)',
+                        data: Object.values(topicData),
+                        backgroundColor: 'rgba(111, 66, 193, 0.7)',
+                        borderColor: 'rgba(111, 66, 193, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 5
+                        }
+                    }
+                }
+            });
         }
     </script>
 </body>
