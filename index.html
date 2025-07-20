@@ -7,107 +7,552 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
+        :root {
+            --primary-color: #6c63ff;
+            --secondary-color: #5a52d5;
+            --accent-color: #ff6b9d;
+            --success-color: #00d4aa;
+            --warning-color: #ffb800;
+            --danger-color: #ff5757;
+            --dark-color: #2d3748;
+            --light-color: #f7fafc;
+            --shadow-light: 0 4px 15px rgba(0,0,0,0.1);
+            --shadow-heavy: 0 20px 40px rgba(0,0,0,0.15);
+            --border-radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Calibri', Arial, sans-serif;
-            background-color: #f8f9fa;
-        }
-        .sidebar {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6c63ff 0%, #5a52d5 100%);
+            margin: 0;
+            padding: 0;
             min-height: 100vh;
-            background-color: #343a40;
-            color: white;
+        }
+        
+        .sidebar {
+            background: rgba(45, 55, 72, 0.95);
+            backdrop-filter: blur(20px);
+            min-height: 100vh;
+            box-shadow: var(--shadow-heavy);
             position: fixed;
-            width: 250px;
+            width: 280px;
+            z-index: 1000;
+            border-right: 1px solid rgba(255,255,255,0.1);
         }
-        .sidebar .nav-link {
-            color: rgba(255, 255, 255, 0.8);
-            padding: 0.75rem 1rem;
-            border-radius: 0.25rem;
-            margin-bottom: 0.25rem;
+
+        .sidebar-header {
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+
+        .sidebar-header h2 {
             color: white;
-            background-color: rgba(255, 255, 255, 0.1);
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin: 0;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
+
+        .sidebar-header .subtitle {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.8) !important;
+            border-radius: var(--border-radius);
+            margin: 8px 15px;
+            padding: 15px 20px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .sidebar .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: var(--transition);
+        }
+
+        .sidebar .nav-link:hover::before {
+            left: 100%;
+        }
+
         .sidebar .nav-link i {
-            margin-right: 10px;
+            margin-right: 12px;
+            font-size: 1.1rem;
         }
+        
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: #fff !important;
+            transform: translateX(8px) scale(1.02);
+            box-shadow: var(--shadow-light);
+        }
+        
         .main-content {
-            margin-left: 250px;
-            padding: 20px;
+            margin-left: 280px;
+            padding: 30px;
+            min-height: 100vh;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
         }
+        
+        .content-section {
+            display: none;
+            animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        @keyframes slideInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px) scale(0.95);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
         .card {
+            border: none;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-light);
+            transition: var(--transition);
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            overflow: hidden;
             margin-bottom: 20px;
-            border-radius: 0.5rem;
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            position: relative;
         }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+        }
+
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-heavy);
+            border-color: rgba(255,255,255,0.3);
+        }
+
         .card-header {
-            background-color: #f8f9fa;
-            font-weight: bold;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 20px;
+            font-weight: 600;
+            position: relative;
         }
+
+        .card-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        }
+        
         .table-responsive {
             overflow-x: auto;
         }
+        
         table {
             width: 100%;
             border-collapse: collapse;
         }
+        
+        .table {
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-light);
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+        }
+        
+        .table th {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 20px 15px;
+            position: relative;
+        }
+
+        .table th::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-color), transparent, var(--accent-color));
+        }
+
+        .table td {
+            padding: 15px;
+            vertical-align: middle;
+            border-color: rgba(0,0,0,0.05);
+        }
+
+        .table tbody tr {
+            transition: var(--transition);
+        }
+
+        .table tbody tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+            transform: scale(1.01);
+        }
+        
         th, td {
             border: 1px solid #dee2e6;
             padding: 8px;
             text-align: left;
         }
+        
         th {
             background-color: #f8f9fa;
             font-weight: bold;
         }
+        
         .btn-add {
             margin-bottom: 15px;
         }
+        
+        .btn {
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 12px 24px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transition: var(--transition);
+            transform: translate(-50%, -50%);
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-light);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color), #45b7b8);
+            border: none;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning-color), #feca57);
+            border: none;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger-color), #ee5a52);
+            border: none;
+        }
+        
         .form-group {
             margin-bottom: 15px;
         }
+        
         .stats-card {
             text-align: center;
-            padding: 15px;
-            border-radius: 0.5rem;
+            padding: 30px;
+            border-radius: 20px;
             color: white;
             margin-bottom: 20px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.2);
         }
+
+        .stats-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            transform: scale(0);
+            transition: var(--transition);
+        }
+
+        .stats-card:hover::before {
+            transform: scale(1);
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: var(--shadow-heavy);
+            animation: pulse 2s infinite;
+        }
+        
         .stats-card i {
-            font-size: 2rem;
-            margin-bottom: 10px;
+            font-size: 3rem;
+            margin-bottom: 15px;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
+        
         .stats-card.blue {
-            background-color: #007bff;
+            background: linear-gradient(135deg, #6c63ff, #5a52d5);
         }
+        
         .stats-card.green {
-            background-color: #28a745;
+            background: linear-gradient(135deg, #00d4aa, #00b894);
         }
+        
         .stats-card.orange {
-            background-color: #fd7e14;
+            background: linear-gradient(135deg, #ffb800, #f39c12);
         }
+        
         .stats-card.purple {
-            background-color: #6f42c1;
+            background: linear-gradient(135deg, #ff6b9d, #e84393);
         }
+        
         .editable {
             cursor: pointer;
+            transition: var(--transition);
         }
+        
         .editable:hover {
-            background-color: #f8f9fa;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(247, 147, 251, 0.1));
+            cursor: pointer;
+            border-radius: 8px;
+            transform: scale(1.02);
+            box-shadow: var(--shadow-light);
         }
+        
         #auth-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: white;
-            z-index: 1000;
+            z-index: 9999;
+            background: linear-gradient(135deg, #6c63ff 0%, #5a52d5 100%);
             display: flex;
             justify-content: center;
             align-items: center;
         }
+
+        #auth-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1" fill="white" opacity="0.1"/><circle cx="80" cy="80" r="1" fill="white" opacity="0.1"/><circle cx="40" cy="60" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            pointer-events: none;
+        }
+        
+        #auth-box {
+            width: 400px;
+            padding: 50px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: var(--shadow-heavy);
+            border: 1px solid rgba(255,255,255,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #auth-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color), var(--success-color));
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 10000;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+            box-shadow: var(--shadow-light);
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        .custom-toast {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-light);
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(102, 126, 234, 0.1);
+            border-left: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+                transition: var(--transition);
+                width: 250px;
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 80px 15px 20px;
+            }
+
+            .quick-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-stat h3 {
+                font-size: 2rem;
+            }
+
+            #auth-box {
+                margin: 20px;
+                padding: 30px;
+                width: calc(100% - 40px);
+            }
+
+            .card {
+                margin-bottom: 15px;
+            }
+
+            .stats-card {
+                padding: 20px;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+        }
+        
         #auth-box {
             width: 300px;
             padding: 20px;
@@ -180,6 +625,87 @@
             background-color: #f8f9fa;
             border-left: 4px solid #28a745;
         }
+
+        /* Logout button styling */
+        .btn-outline-danger {
+            border-color: var(--danger-color);
+            color: var(--danger-color);
+            transition: var(--transition);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-outline-danger:hover {
+            background: linear-gradient(135deg, var(--danger-color), #e74c3c);
+            border-color: var(--danger-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-light);
+        }
+
+        .btn-outline-danger:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+        }
+
+        /* Alternative logout button styles */
+        #logout-btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        #logout-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transition: var(--transition);
+            transform: translate(-50%, -50%);
+        }
+
+        #logout-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-outline-warning {
+            border-color: var(--warning-color);
+            color: var(--warning-color);
+            transition: var(--transition);
+        }
+
+        .btn-outline-warning:hover {
+            background: var(--warning-color);
+            border-color: var(--warning-color);
+            color: #333;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-light);
+        }
+
+        /* User dropdown styling */
+        .dropdown-menu {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-light);
+        }
+
+        .dropdown-item {
+            transition: var(--transition);
+            border-radius: 8px;
+            margin: 2px 8px;
+        }
+
+        .dropdown-item:hover {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(247, 147, 251, 0.1));
+            transform: translateX(4px);
+        }
     </style>
 </head>
 <body>
@@ -194,7 +720,10 @@
                 <input type="password" id="password" class="form-control" placeholder="Password">
             </div>
             <button id="login-btn" class="btn btn-primary w-100 mb-2">Login</button>
-            <button id="signup-btn" class="btn btn-secondary w-100">Sign Up</button>
+            <button id="signup-btn" class="btn btn-secondary w-100 mb-2">Sign Up</button>
+            <button id="forgot-password-btn" class="btn btn-link w-100 text-decoration-none">
+                <i class="bi bi-key"></i> Forgot Password?
+            </button>
             <div id="auth-message" class="mt-3 text-center text-danger"></div>
         </div>
     </div>
@@ -203,8 +732,17 @@
     <div id="app-container" style="display: none;">
         <!-- Sidebar -->
         <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>CP Tracker</h2>
+                <div class="subtitle">Competitive Programming Dashboard</div>
+            </div>
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-toggle d-lg-none" onclick="toggleSidebar()">
+                <i class="bi bi-list"></i>
+            </button>
+            
             <div class="p-4">
-                <h4 class="mb-4">CP Tracker</h4>
                 <ul class="nav flex-column">
                     <li class="nav-item">
                         <a class="nav-link active" href="#" data-section="dashboard">
@@ -246,12 +784,31 @@
                             <i class="bi bi-person-gear"></i> Profile & Settings
                         </a>
                     </li>
-                    <li class="nav-item mt-4">
-                        <a class="nav-link text-warning" href="#" id="logout-btn">
-                            <i class="bi bi-box-arrow-right"></i> Logout
-                        </a>
-                    </li>
                 </ul>
+                
+                <!-- Streak Counter -->
+                <div class="streak-counter mt-4 mb-3">
+                    <div style="padding-left: 40px;">
+                        <div style="font-size: 0.9rem; opacity: 0.8;">Current Streak</div>
+                        <div id="streak-days" style="font-size: 1.2rem;">0 days</div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="quick-actions mb-3">
+                    <button class="btn btn-primary btn-sm w-100 mb-2" onclick="quickAddProblem()">
+                        <i class="bi bi-plus-circle"></i> Quick Add Problem
+                    </button>
+                    <button class="btn btn-success btn-sm w-100" onclick="openAutoFetch()">
+                        <i class="bi bi-cloud-download"></i> Sync Data
+                    </button>
+                </div>
+                
+                <div class="mt-4 pt-3" style="border-top: 1px solid rgba(255,255,255,0.1);">
+                    <button class="btn btn-outline-danger w-100" id="logout-btn" onclick="confirmLogout()">
+                        <i class="bi bi-box-arrow-right me-2"></i> Logout
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -259,7 +816,65 @@
         <div class="main-content">
             <!-- Dashboard Section -->
             <div id="dashboard-section">
-                <h2 class="mb-4">Dashboard</h2>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0">
+                        <i class="bi bi-speedometer2 me-2"></i>
+                        Dashboard
+                    </h2>
+                    <div class="d-flex gap-2 align-items-center">
+                        <button class="btn btn-primary btn-sm" onclick="showQuickStats()">
+                            <i class="bi bi-lightning"></i> Quick Stats
+                        </button>
+                        <button class="btn btn-success btn-sm" onclick="refreshDashboard()">
+                            <i class="bi bi-arrow-clockwise"></i> Refresh
+                        </button>
+                        
+                        <!-- User Profile Dropdown -->
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-person-circle me-1"></i>
+                                <span id="user-email-header">User</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="#" data-section="profile">
+                                        <i class="bi bi-person-gear me-2"></i>Profile & Settings
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="#" onclick="confirmLogout()">
+                                        <i class="bi bi-box-arrow-right me-2"></i>Logout
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats Row -->
+                <div class="quick-stats mb-4">
+                    <div class="quick-stat">
+                        <h4>Today's Progress</h4>
+                        <p id="today-problems">0</p>
+                        <small class="text-muted">problems solved</small>
+                    </div>
+                    <div class="quick-stat">
+                        <h4>This Week</h4>
+                        <p id="week-problems">0</p>
+                        <small class="text-muted">problems solved</small>
+                    </div>
+                    <div class="quick-stat">
+                        <h4>Average Rating</h4>
+                        <p id="avg-rating">-</p>
+                        <small class="text-muted">across platforms</small>
+                    </div>
+                    <div class="quick-stat">
+                        <h4>Success Rate</h4>
+                        <p id="success-rate">-</p>
+                        <small class="text-muted">in contests</small>
+                    </div>
+                </div>
                 
                 <div class="row">
                     <div class="col-md-3">
@@ -267,6 +882,7 @@
                             <i class="bi bi-trophy"></i>
                             <h5>Contests</h5>
                             <h3 id="total-contests">0</h3>
+                            <div class="achievement-badge">Contestant</div>
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -274,6 +890,7 @@
                             <i class="bi bi-check-circle"></i>
                             <h5>Problems Solved</h5>
                             <h3 id="total-solved">0</h3>
+                            <div class="achievement-badge">Problem Solver</div>
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -281,6 +898,7 @@
                             <i class="bi bi-exclamation-triangle"></i>
                             <h5>Mistakes Logged</h5>
                             <h3 id="total-mistakes">0</h3>
+                            <div class="achievement-badge">Learner</div>
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -288,6 +906,7 @@
                             <i class="bi bi-book"></i>
                             <h5>Topics Practiced</h5>
                             <h3 id="total-topics">0</h3>
+                            <div class="achievement-badge">Scholar</div>
                         </div>
                     </div>
                 </div>
@@ -1381,6 +2000,15 @@
                     currentUser = user;
                     document.getElementById('auth-container').style.display = 'none';
                     document.getElementById('app-container').style.display = 'block';
+                    
+                    // Update user email in header
+                    const userEmailHeader = document.getElementById('user-email-header');
+                    if (userEmailHeader) {
+                        const email = user.email;
+                        const displayName = email.split('@')[0]; // Show username part before @
+                        userEmailHeader.textContent = displayName;
+                    }
+                    
                     loadAllData();
                     // Ensure save edit handler is ready after login
                     setTimeout(() => {
@@ -1397,6 +2025,100 @@
                 }
             });
 
+            // Setup initial authentication listeners
+            setupAuthListeners();
+        }
+
+        // Show forgot password form
+        function showForgotPasswordForm() {
+            const authBox = document.getElementById('auth-box');
+            authBox.innerHTML = `
+                <h3 class="text-center mb-4">Reset Password</h3>
+                <div class="form-group">
+                    <input type="email" id="reset-email" class="form-control" placeholder="Enter your email address" required>
+                </div>
+                <button id="send-reset-btn" class="btn btn-primary w-100 mb-2">
+                    <i class="bi bi-envelope"></i> Send Reset Email
+                </button>
+                <button id="back-to-login-btn" class="btn btn-link w-100 text-decoration-none">
+                    <i class="bi bi-arrow-left"></i> Back to Login
+                </button>
+                <div id="reset-message" class="mt-3 text-center"></div>
+            `;
+
+            // Send reset email button
+            document.getElementById('send-reset-btn').addEventListener('click', () => {
+                const email = document.getElementById('reset-email').value;
+                const resetMessage = document.getElementById('reset-message');
+                const sendResetBtn = document.getElementById('send-reset-btn');
+                
+                if (!email) {
+                    resetMessage.className = 'mt-3 text-center text-danger';
+                    resetMessage.textContent = 'Please enter your email address.';
+                    return;
+                }
+
+                // Show loading state
+                sendResetBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Sending...';
+                sendResetBtn.disabled = true;
+                resetMessage.textContent = '';
+
+                auth.sendPasswordResetEmail(email)
+                    .then(() => {
+                        resetMessage.className = 'mt-3 text-center text-success';
+                        resetMessage.textContent = 'Password reset email sent! Check your inbox.';
+                        sendResetBtn.innerHTML = '<i class="bi bi-check-circle"></i> Email Sent';
+                        
+                        // Show success toast notification
+                        showToast('Password reset email sent successfully!', 'success');
+                        
+                        // Auto return to login after 3 seconds
+                        setTimeout(() => {
+                            showLoginForm();
+                        }, 3000);
+                    })
+                    .catch((error) => {
+                        resetMessage.className = 'mt-3 text-center text-danger';
+                        resetMessage.textContent = error.message;
+                        sendResetBtn.innerHTML = '<i class="bi bi-envelope"></i> Send Reset Email';
+                        sendResetBtn.disabled = false;
+                        
+                        // Show error toast notification
+                        showToast('Failed to send reset email: ' + error.message, 'error');
+                    });
+            });
+
+            // Back to login button
+            document.getElementById('back-to-login-btn').addEventListener('click', () => {
+                showLoginForm();
+            });
+        }
+
+        // Show login form (restore original login form)
+        function showLoginForm() {
+            const authBox = document.getElementById('auth-box');
+            authBox.innerHTML = `
+                <h3 class="text-center mb-4">CP Tracker Login</h3>
+                <div class="form-group">
+                    <input type="email" id="email" class="form-control" placeholder="Email">
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" class="form-control" placeholder="Password">
+                </div>
+                <button id="login-btn" class="btn btn-primary w-100 mb-2">Login</button>
+                <button id="signup-btn" class="btn btn-secondary w-100 mb-2">Sign Up</button>
+                <button id="forgot-password-btn" class="btn btn-link w-100 text-decoration-none">
+                    <i class="bi bi-key"></i> Forgot Password?
+                </button>
+                <div id="auth-message" class="mt-3 text-center text-danger"></div>
+            `;
+
+            // Re-setup event listeners
+            setupAuthListeners();
+        }
+
+        // Setup authentication event listeners
+        function setupAuthListeners() {
             // Login button
             document.getElementById('login-btn').addEventListener('click', () => {
                 const email = document.getElementById('email').value;
@@ -1425,9 +2147,118 @@
                     });
             });
 
-            // Logout button
-            document.getElementById('logout-btn').addEventListener('click', () => {
-                auth.signOut();
+            // Forgot password button
+            document.getElementById('forgot-password-btn').addEventListener('click', () => {
+                showForgotPasswordForm();
+            });
+        }
+
+        // Toast notification function
+        function showToast(message, type = 'info') {
+            // Create toast container if it doesn't exist
+            let toastContainer = document.querySelector('.toast-container');
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.className = 'toast-container';
+                document.body.appendChild(toastContainer);
+            }
+
+            const toastId = 'toast_' + Date.now();
+            const iconClass = type === 'success' ? 'bi-check-circle-fill text-success' : 
+                             type === 'error' ? 'bi-exclamation-triangle-fill text-danger' : 
+                             'bi-info-circle-fill text-primary';
+
+            const toastHtml = `
+                <div class="toast custom-toast" id="${toastId}" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+                    <div class="toast-header">
+                        <i class="bi ${iconClass} me-2"></i>
+                        <strong class="me-auto">CP Tracker</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                    </div>
+                    <div class="toast-body">
+                        ${message}
+                    </div>
+                </div>
+            `;
+
+            toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+            
+            const toastElement = document.getElementById(toastId);
+            const toast = new bootstrap.Toast(toastElement);
+            toast.show();
+
+            // Remove from DOM after hiding
+            toastElement.addEventListener('hidden.bs.toast', () => {
+                toastElement.remove();
+            });
+        }
+
+        // Confirm logout function
+        function confirmLogout() {
+            // Create confirmation modal
+            const modalHtml = `
+                <div class="modal fade" id="logoutConfirmModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">
+                                    <i class="bi bi-box-arrow-right text-warning me-2"></i>
+                                    Confirm Logout
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="mb-3">Are you sure you want to logout from CP Tracker?</p>
+                                <div class="alert alert-info d-flex align-items-center" role="alert">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <div>Your data will be saved automatically and you can login again anytime.</div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    <i class="bi bi-x-circle me-2"></i>Cancel
+                                </button>
+                                <button type="button" class="btn btn-danger" onclick="performLogout()">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Yes, Logout
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Remove existing modal if any
+            const existingModal = document.getElementById('logoutConfirmModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+
+            // Add modal to body
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('logoutConfirmModal'));
+            modal.show();
+
+            // Clean up modal after hiding
+            document.getElementById('logoutConfirmModal').addEventListener('hidden.bs.modal', function() {
+                this.remove();
+            });
+        }
+
+        // Perform logout function
+        function performLogout() {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('logoutConfirmModal'));
+            modal.hide();
+
+            // Show loading toast
+            showToast('Logging out...', 'info');
+
+            // Sign out from Firebase
+            auth.signOut().then(() => {
+                showToast('Successfully logged out. See you soon!', 'success');
+            }).catch((error) => {
+                showToast('Error logging out: ' + error.message, 'error');
             });
         }
 
@@ -1524,7 +2355,7 @@
 
         // Navigation setup
         function setupNavigation() {
-            // Only target main navigation links in the sidebar, not task tabs
+            // Handle sidebar navigation links
             document.querySelectorAll('.sidebar .nav-link').forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -1562,6 +2393,47 @@
                             updateDailyProgressAnalytics();
                             updateAdvancedAnalytics();
                         }, 100);
+                    }
+                    
+                    // Update profile when profile section is shown
+                    if (sectionId === 'profile-section') {
+                        setTimeout(() => {
+                            updateProfileInfo();
+                        }, 100);
+                    }
+                });
+            });
+
+            // Handle dropdown navigation links
+            document.querySelectorAll('.dropdown-item[data-section]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Update sidebar active link
+                    document.querySelectorAll('.sidebar .nav-link').forEach(navLink => {
+                        navLink.classList.remove('active');
+                    });
+                    
+                    const sectionAttribute = this.getAttribute('data-section');
+                    const correspondingSidebarLink = document.querySelector(`.sidebar .nav-link[data-section="${sectionAttribute}"]`);
+                    if (correspondingSidebarLink) {
+                        correspondingSidebarLink.classList.add('active');
+                    }
+                    
+                    // Hide all sections
+                    document.querySelectorAll('[id$="-section"]').forEach(section => {
+                        section.style.display = 'none';
+                    });
+                    
+                    // Show selected section
+                    const sectionId = sectionAttribute + '-section';
+                    const targetSection = document.getElementById(sectionId);
+                    
+                    if (targetSection) {
+                        targetSection.style.display = 'block';
+                        console.log('Navigated to section:', sectionId);
+                    } else {
+                        console.warn('Section not found:', sectionId);
                     }
                     
                     // Update profile when profile section is shown
@@ -3885,10 +4757,245 @@
                 '<div class="suggestion-item">Great job! Keep up the consistent practice.</div>';
         }
 
+        // New Enhanced Features
+        
+        // Toast Notification System
+        function showToast(message, type = 'info') {
+            const toastEl = document.getElementById('notification-toast');
+            const messageEl = document.getElementById('toast-message');
+            
+            messageEl.textContent = message;
+            
+            // Set toast color based on type
+            toastEl.className = 'toast custom-toast show';
+            if (type === 'success') {
+                toastEl.style.borderLeft = '4px solid var(--success-color)';
+            } else if (type === 'error') {
+                toastEl.style.borderLeft = '4px solid var(--danger-color)';
+            } else if (type === 'warning') {
+                toastEl.style.borderLeft = '4px solid var(--warning-color)';
+            } else {
+                toastEl.style.borderLeft = '4px solid var(--primary-color)';
+            }
+            
+            const toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        }
+
+        // Calculate and update streak
+        function updateStreak() {
+            if (dailyLogs.length === 0) {
+                document.getElementById('streak-days').textContent = '0 days';
+                return;
+            }
+
+            const sortedLogs = [...dailyLogs].sort((a, b) => new Date(b.date) - new Date(a.date));
+            let streak = 0;
+            let currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0);
+
+            for (let i = 0; i < sortedLogs.length; i++) {
+                const logDate = new Date(sortedLogs[i].date);
+                logDate.setHours(0, 0, 0, 0);
+                
+                const diffTime = currentDate - logDate;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                
+                if (diffDays === streak) {
+                    const problemsSolved = (parseInt(sortedLogs[i].cf_solved) || 0) + 
+                                         (parseInt(sortedLogs[i].ac_solved) || 0) + 
+                                         (parseInt(sortedLogs[i].cc_solved) || 0);
+                    if (problemsSolved > 0) {
+                        streak++;
+                        currentDate.setDate(currentDate.getDate() - 1);
+                    } else {
+                        break;
+                    }
+                } else if (diffDays > streak) {
+                    break;
+                }
+            }
+
+            document.getElementById('streak-days').textContent = `${streak} days`;
+            
+            // Show achievement notification for milestone streaks
+            if (streak > 0 && streak % 7 === 0) {
+                showToast(`🔥 Amazing! You've maintained a ${streak}-day streak!`, 'success');
+            }
+        }
+
+        // Quick add problem function
+        function quickAddProblem() {
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Check if today's log exists
+            let todayLog = dailyLogs.find(log => log.date === today);
+            
+            if (!todayLog) {
+                // Create new log for today
+                todayLog = {
+                    id: dailyLogs.length > 0 ? Math.max(...dailyLogs.map(l => l.id)) + 1 : 1,
+                    date: today,
+                    cf_solved: 1,
+                    ac_solved: 0,
+                    cc_solved: 0,
+                    hours: 1,
+                    contest: '',
+                    notes: 'Quick add via dashboard'
+                };
+                dailyLogs.push(todayLog);
+            } else {
+                // Increment CF problems by 1
+                todayLog.cf_solved = (parseInt(todayLog.cf_solved) || 0) + 1;
+            }
+            
+            saveData('dailyLogs', dailyLogs);
+            showToast('Problem added to today\'s log!', 'success');
+            updateDashboardStats();
+            updateStreak();
+        }
+
+        // Open auto-fetch modal
+        function openAutoFetch() {
+            // Simulate opening the auto-fetch modal (you can customize this)
+            const modal = new bootstrap.Modal(document.getElementById('autoFetchModal'));
+            modal.show();
+        }
+
+        // Mobile sidebar toggle
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('show');
+        }
+
+        // Quick stats functions
+        function updateQuickStats() {
+            const today = new Date().toISOString().split('T')[0];
+            const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+            // Today's problems
+            const todayLog = dailyLogs.find(log => log.date === today);
+            const todayProblems = todayLog ? 
+                (parseInt(todayLog.cf_solved) || 0) + (parseInt(todayLog.ac_solved) || 0) + (parseInt(todayLog.cc_solved) || 0) : 0;
+            document.getElementById('today-problems').textContent = todayProblems;
+
+            // Week's problems
+            const weekLogs = dailyLogs.filter(log => log.date >= weekAgo);
+            const weekProblems = weekLogs.reduce((sum, log) => 
+                sum + (parseInt(log.cf_solved) || 0) + (parseInt(log.ac_solved) || 0) + (parseInt(log.cc_solved) || 0), 0);
+            document.getElementById('week-problems').textContent = weekProblems;
+
+            // Average rating (from contests)
+            const ratingsWithChange = contests.filter(c => c.rating_change && c.rating_change !== 0);
+            if (ratingsWithChange.length > 0) {
+                const avgRating = Math.round(ratingsWithChange.reduce((sum, c) => sum + (parseInt(c.rating_change) || 0), 0) / ratingsWithChange.length);
+                document.getElementById('avg-rating').textContent = avgRating > 0 ? `+${avgRating}` : avgRating;
+            } else {
+                document.getElementById('avg-rating').textContent = '-';
+            }
+
+            // Success rate (contests with positive rating change)
+            if (contests.length > 0) {
+                const successfulContests = contests.filter(c => (parseInt(c.rating_change) || 0) > 0).length;
+                const successRate = Math.round((successfulContests / contests.length) * 100);
+                document.getElementById('success-rate').textContent = `${successRate}%`;
+            } else {
+                document.getElementById('success-rate').textContent = '-';
+            }
+        }
+
+        // Show quick stats with animation
+        function showQuickStats() {
+            updateQuickStats();
+            const quickStats = document.querySelector('.quick-stats');
+            quickStats.style.animation = 'pulse 0.6s ease-in-out';
+            setTimeout(() => {
+                quickStats.style.animation = '';
+            }, 600);
+            showToast('Stats refreshed!', 'info');
+        }
+
+        // Refresh dashboard
+        function refreshDashboard() {
+            showLoadingOverlay(true);
+            
+            setTimeout(() => {
+                updateDashboardStats();
+                updateQuickStats();
+                updateStreak();
+                updateActiveTasks();
+                showLoadingOverlay(false);
+                showToast('Dashboard refreshed!', 'success');
+            }, 1000);
+        }
+
+        // Show/hide loading overlay
+        function showLoadingOverlay(show) {
+            const overlay = document.getElementById('loading-overlay');
+            overlay.style.display = show ? 'flex' : 'none';
+        }
+
+        // Quick actions floating button
+        function showQuickActions() {
+            const actions = [
+                { text: 'Add Problem', action: quickAddProblem, icon: 'bi-plus-circle' },
+                { text: 'Sync Data', action: openAutoFetch, icon: 'bi-cloud-download' },
+                { text: 'View Analytics', action: () => showSection('analytics'), icon: 'bi-graph-up' }
+            ];
+            
+            // Create quick action menu (you can enhance this further)
+            showToast('Quick actions: Add Problem, Sync Data, View Analytics', 'info');
+        }
+
+        // Enhanced update dashboard stats
+        function updateDashboardStatsEnhanced() {
+            updateDashboardStats();
+            updateQuickStats();
+            updateStreak();
+        }
+
         // Add event listener for heatmap period change
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('heatmapPeriod').addEventListener('change', updateActivityHeatmap);
+            
+            // Initialize enhanced features
+            setTimeout(() => {
+                updateStreak();
+                updateQuickStats();
+            }, 1000);
         });
+
+        // Override the original updateDashboardStats to include new features
+        const originalUpdateDashboardStats = updateDashboardStats;
+        updateDashboardStats = function() {
+            originalUpdateDashboardStats.call(this);
+            updateQuickStats();
+            updateStreak();
+        };
     </script>
+
+    <!-- Toast Notifications Container -->
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+        <div id="notification-toast" class="toast custom-toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">CP Tracker</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="toast-message">
+                <!-- Toast message will appear here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <button class="fab d-none d-lg-block" onclick="showQuickActions()" title="Quick Actions">
+        <i class="bi bi-plus"></i>
+    </button>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+        <div class="loading-spinner"></div>
+    </div>
+
 </body>
 </html>
