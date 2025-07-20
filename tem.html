@@ -114,6 +114,72 @@
             border: 1px solid #ddd;
             border-radius: 5px;
         }
+        .progress {
+            height: 20px;
+        }
+        .task-card {
+            transition: all 0.3s;
+        }
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        .completed-task {
+            opacity: 0.7;
+            background-color: #f8f9fa;
+        }
+        .recent-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .recent-item:last-child {
+            border-bottom: none;
+        }
+        .topic-to-improve {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .topic-to-improve:last-child {
+            border-bottom: none;
+        }
+        .confidence-stars {
+            color: #ffc107;
+        }
+        .border-purple {
+            border-color: #6f42c1 !important;
+        }
+        .text-purple {
+            color: #6f42c1 !important;
+        }
+        .heatmap-day {
+            width: 12px;
+            height: 12px;
+            margin: 1px;
+            border-radius: 2px;
+            display: inline-block;
+            background-color: #eee;
+        }
+        .heatmap-day.level-1 { background-color: #c6e48b; }
+        .heatmap-day.level-2 { background-color: #7bc96f; }
+        .heatmap-day.level-3 { background-color: #239a3b; }
+        .heatmap-day.level-4 { background-color: #196127; }
+        .insight-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+        }
+        .suggestion-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #28a745;
+        }
     </style>
 </head>
 <body>
@@ -143,6 +209,11 @@
                     <li class="nav-item">
                         <a class="nav-link active" href="#" data-section="dashboard">
                             <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="tasks">
+                            <i class="bi bi-list-check"></i> Task Manager
                         </a>
                     </li>
                     <li class="nav-item">
@@ -216,86 +287,101 @@
                     </div>
                 </div>
                 
-                <div class="row">
-                    <div class="col-md-6">
+                <div class="row mt-4">
+                    <div class="col-md-4">
                         <div class="card">
+                            <div class="card-header">
+                                Active Tasks
+                            </div>
+                            <div class="card-body">
+                                <div id="active-tasks">
+                                    <!-- Active tasks will appear here -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card mt-4">
                             <div class="card-header">
                                 Recent Contests
                             </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Date</th>
-                                                <th>Contest</th>
-                                                <th>Solved</th>
-                                                <th>Rating Δ</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="recent-contests">
-                                            <tr>
-                                                <td colspan="4" class="text-center">No contests yet</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                            <div class="card-body p-0">
+                                <div id="recent-contests">
+                                    <!-- Recent contests will appear here -->
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="col-md-6">
-                        <div class="card">
+                    <div class="col-md-4">
+                        <div class="card mt-4">
                             <div class="card-header">
                                 Recent Mistakes
                             </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Date</th>
-                                                <th>Problem</th>
-                                                <th>Mistake</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="recent-mistakes">
-                                            <tr>
-                                                <td colspan="3" class="text-center">No mistakes yet</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                            <div class="card-body p-0">
+                                <div id="recent-mistakes">
+                                    <!-- Recent mistakes will appear here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                Topics to Improve
+                            </div>
+                            <div class="card-body p-0">
+                                <div id="topics-to-improve">
+                                    <!-- Topics to improve will appear here -->
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+            
+            <!-- Task Manager Section -->
+            <div id="tasks-section" style="display: none;">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Task Manager</h2>
+                    <button class="btn btn-primary" id="add-task-btn">
+                        <i class="bi bi-plus"></i> Add New Task
+                    </button>
+                </div>
                 
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-header">
-                                Topics to Improve
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Topic</th>
-                                                <th>Confidence</th>
-                                                <th>Last Practiced</th>
-                                                <th>Notes</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="topics-to-improve">
-                                            <tr>
-                                                <td colspan="4" class="text-center">No topics yet</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                <div class="card">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-task-tab="all">All Tasks</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#" data-task-tab="active">Active</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-task-tab="completed">Completed</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Task Name</th>
+                                        <th>Type</th>
+                                        <th>Progress</th>
+                                        <th>Priority</th>
+                                        <th>Due Date</th>
+                                        <th>Status</th>
+                                        <th>Notes</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="task-table">
+                                    <!-- Tasks will appear here -->
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -328,9 +414,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="contest-table">
-                                    <tr>
-                                        <td colspan="9" class="text-center">No contests yet</td>
-                                    </tr>
+                                    <!-- Contests will appear here -->
                                 </tbody>
                             </table>
                         </div>
@@ -363,9 +447,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="daily-table">
-                                    <tr>
-                                        <td colspan="7" class="text-center">No daily logs yet</td>
-                                    </tr>
+                                    <!-- Daily logs will appear here -->
                                 </tbody>
                             </table>
                         </div>
@@ -398,9 +480,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="mistake-table">
-                                    <tr>
-                                        <td colspan="7" class="text-center">No mistakes yet</td>
-                                    </tr>
+                                    <!-- Mistakes will appear here -->
                                 </tbody>
                             </table>
                         </div>
@@ -432,55 +512,362 @@
                                     </tr>
                                 </thead>
                                 <tbody id="topic-table">
-                                    <tr>
-                                        <td colspan="6" class="text-center">No topics yet</td>
-                                    </tr>
+                                    <!-- Topics will appear here -->
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Analytics Section -->
             <div id="analytics-section" style="display: none;">
                 <h2 class="mb-4">Analytics</h2>
                 
-                <div class="row">
+                <!-- Daily Progress Analytics -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="bi bi-calendar-day text-primary" style="font-size: 2rem;"></i>
+                                <h5 class="card-title mt-2">Today</h5>
+                                <h3 class="text-primary" id="today-progress">0</h3>
+                                <small class="text-muted">Problems Solved</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="bi bi-calendar3 text-success" style="font-size: 2rem;"></i>
+                                <h5 class="card-title mt-2">Last 3 Days</h5>
+                                <h3 class="text-success" id="three-days-progress">0</h3>
+                                <small class="text-muted">Problems Solved</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="bi bi-book text-warning" style="font-size: 2rem;"></i>
+                                <h5 class="card-title mt-2">Topics (3 Days)</h5>
+                                <h3 class="text-warning" id="topics-three-days">0</h3>
+                                <small class="text-muted">Topics Practiced</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="bi bi-calendar-week text-info" style="font-size: 2rem;"></i>
+                                <h5 class="card-title mt-2">This Week</h5>
+                                <h3 class="text-info" id="week-progress">0</h3>
+                                <small class="text-muted">Problems Solved</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Daily Progress Chart -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Daily Progress Tracking</h5>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <button type="button" class="btn btn-outline-primary active" id="progress-7days">7 Days</button>
+                                <button type="button" class="btn btn-outline-primary" id="progress-14days">14 Days</button>
+                                <button type="button" class="btn btn-outline-primary" id="progress-30days">30 Days</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="dailyProgressChart" height="300"></canvas>
+                    </div>
+                </div>
+
+                <!-- Topic Learning Progress -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        Topic Learning Timeline (Last 30 Days)
+                    </div>
+                    <div class="card-body">
+                        <canvas id="topicTimelineChart" height="200"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Advanced Analytics Section -->
+                <div class="row mb-4">
+                    <!-- Contest Performance Metrics -->
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header">
-                                Problems Solved Over Time
+                                <h6 class="mb-0">Contest Performance Trends</h6>
                             </div>
                             <div class="card-body">
-                                <canvas id="solvedChart" height="300"></canvas>
+                                <canvas id="contestRatingChart" height="200"></canvas>
                             </div>
                         </div>
                     </div>
                     
+                    <!-- Problem Solving Velocity -->
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header">
-                                Mistake Types
+                                <h6 class="mb-0">Problem Solving Velocity</h6>
                             </div>
                             <div class="card-body">
-                                <canvas id="mistakesChart" height="300"></canvas>
+                                <canvas id="solvingVelocityChart" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advanced Metrics Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-2">
+                        <div class="card text-center border-primary">
+                            <div class="card-body">
+                                <i class="bi bi-lightning text-primary" style="font-size: 1.5rem;"></i>
+                                <h6 class="text-primary mt-2 mb-1">Avg Rating Δ</h6>
+                                <h5 class="text-primary" id="avg-rating-change">+0</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card text-center border-success">
+                            <div class="card-body">
+                                <i class="bi bi-speedometer text-success" style="font-size: 1.5rem;"></i>
+                                <h6 class="text-success mt-2 mb-1">Problems/Day</h6>
+                                <h5 class="text-success" id="problems-per-day">0</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card text-center border-warning">
+                            <div class="card-body">
+                                <i class="bi bi-target text-warning" style="font-size: 1.5rem;"></i>
+                                <h6 class="text-warning mt-2 mb-1">Accuracy</h6>
+                                <h5 class="text-warning" id="contest-accuracy">0%</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card text-center border-info">
+                            <div class="card-body">
+                                <i class="bi bi-clock text-info" style="font-size: 1.5rem;"></i>
+                                <h6 class="text-info mt-2 mb-1">Study Streak</h6>
+                                <h5 class="text-info" id="study-streak">0</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card text-center border-purple">
+                            <div class="card-body">
+                                <i class="bi bi-trophy text-purple" style="font-size: 1.5rem;"></i>
+                                <h6 class="text-purple mt-2 mb-1">Best Rank</h6>
+                                <h5 class="text-purple" id="best-rank">-</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card text-center border-danger">
+                            <div class="card-body">
+                                <i class="bi bi-graph-up text-danger" style="font-size: 1.5rem;"></i>
+                                <h6 class="text-danger mt-2 mb-1">Improvement</h6>
+                                <h5 class="text-danger" id="improvement-score">0%</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comprehensive Analysis -->
+                <div class="row mb-4">
+                    <!-- Platform Distribution -->
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">Platform Distribution</h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="platformChart" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Topic Mastery Radar -->
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">Topic Mastery Level</h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="topicMasteryChart" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Mistake Analysis -->
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">Common Mistakes</h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="mistakeDistributionChart" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Heatmap and Time Analysis -->
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">Activity Heatmap</h6>
+                                    <select class="form-select form-select-sm" style="width: auto;" id="heatmapPeriod">
+                                        <option value="3months">Last 3 Months</option>
+                                        <option value="6months">Last 6 Months</option>
+                                        <option value="1year">Last Year</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div id="activityHeatmap" style="height: 200px; overflow-x: auto;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">Study Time Analysis</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row text-center">
+                                    <div class="col-12 mb-3">
+                                        <h4 class="text-primary" id="total-study-hours">0h</h4>
+                                        <small class="text-muted">Total Study Time</small>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <h6 class="text-success" id="avg-daily-hours">0h</h6>
+                                        <small class="text-muted">Daily Average</small>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <h6 class="text-warning" id="peak-study-day">-</h6>
+                                        <small class="text-muted">Most Active Day</small>
+                                    </div>
+                                </div>
+                                <canvas id="studyTimeChart" height="150"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI-Powered Insights -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6 class="mb-0">
+                            <i class="bi bi-lightbulb text-warning"></i>
+                            Smart Insights & Recommendations
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="text-primary">Performance Insights</h6>
+                                <div id="performance-insights">
+                                    <!-- Dynamic insights will appear here -->
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="text-success">Improvement Suggestions</h6>
+                                <div id="improvement-suggestions">
+                                    <!-- Dynamic suggestions will appear here -->
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="row mt-4">
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-header">
-                                Topic Confidence Levels
+                <div class="card">
+                    <div class="card-header">
+                        Performance Overview
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <canvas id="solvedChart" height="300"></canvas>
                             </div>
-                            <div class="card-body">
+                            <div class="col-md-6">
+                                <canvas id="mistakesChart" height="300"></canvas>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-md-12">
                                 <canvas id="topicsChart" height="300"></canvas>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Task Modal -->
+    <div class="modal fade" id="taskModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Task</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="taskForm">
+                        <div class="mb-3">
+                            <label class="form-label">Task Name</label>
+                            <input type="text" class="form-control" id="taskName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Task Type</label>
+                            <select class="form-select" id="taskType" required>
+                                <option value="problem-solving">Problem Solving</option>
+                                <option value="topic-learning">Topic Learning</option>
+                                <option value="contest-prep">Contest Preparation</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Target (Problems/Topics)</label>
+                            <input type="number" class="form-control" id="taskTarget" min="1" value="1">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Priority</label>
+                            <select class="form-select" id="taskPriority">
+                                <option value="1">⭐ Low</option>
+                                <option value="2">⭐⭐ Medium</option>
+                                <option value="3" selected>⭐⭐⭐ High</option>
+                                <option value="4">⭐⭐⭐⭐ Urgent</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Due Date</label>
+                            <input type="date" class="form-control" id="taskDueDate">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Topic (if applicable)</label>
+                            <input type="text" class="form-control" id="taskTopic" placeholder="e.g., Dynamic Programming">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Notes / Plan</label>
+                            <textarea class="form-control" id="taskNotes" rows="3" placeholder="Describe your plan, approach, or any notes for this task..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveTask">Save Task</button>
                 </div>
             </div>
         </div>
@@ -735,9 +1122,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
     
     <script>
-        // Firebase configuration - REPLACE WITH YOUR OWN CONFIG
-       
-const firebaseConfig = {
+  const firebaseConfig = {
   apiKey: "AIzaSyBhDemnqt43w4kJ5Sb1xCghly1yIbMjEfc",
   authDomain: "cp-tracker-f47ec.firebaseapp.com",
   databaseURL: "https://cp-tracker-f47ec-default-rtdb.firebaseio.com",
@@ -758,6 +1143,7 @@ const firebaseConfig = {
         let dailyLogs = [];
         let mistakes = [];
         let topics = [];
+        let tasks = [];
         let currentUser = null;
         let solvedChart, mistakesChart, topicsChart;
 
@@ -767,6 +1153,9 @@ const firebaseConfig = {
             setupNavigation();
             setupModals();
             setupEditFunctionality();
+            setupSaveEditHandler();
+            setupTaskManager();
+            setupAnalyticsButtons();
             setDefaultDates();
         });
 
@@ -780,6 +1169,11 @@ const firebaseConfig = {
                     document.getElementById('auth-container').style.display = 'none';
                     document.getElementById('app-container').style.display = 'block';
                     loadAllData();
+                    // Ensure save edit handler is ready after login
+                    setTimeout(() => {
+                        setupSaveEditHandler();
+                        console.log('Save edit handler re-initialized after login');
+                    }, 500);
                 } else {
                     // No user is signed in
                     currentUser = null;
@@ -830,48 +1224,98 @@ const firebaseConfig = {
             
             // Load contests
             database.ref(`users/${userId}/contests`).on('value', snapshot => {
-                contests = snapshot.val() || [];
+                const data = snapshot.val();
+                contests = data ? Object.values(data) : [];
+                console.log('Loaded contests:', contests); // Debug log
                 renderContests();
                 updateDashboardStats();
+                updateRecentContests();
+                updateCharts();
             });
             
             // Load daily logs
             database.ref(`users/${userId}/dailyLogs`).on('value', snapshot => {
-                dailyLogs = snapshot.val() || [];
+                const data = snapshot.val();
+                dailyLogs = data ? Object.values(data) : [];
+                console.log('Loaded dailyLogs:', dailyLogs); // Debug log
                 renderDailyLogs();
                 updateDashboardStats();
+                updateCharts();
             });
             
             // Load mistakes
             database.ref(`users/${userId}/mistakes`).on('value', snapshot => {
-                mistakes = snapshot.val() || [];
+                const data = snapshot.val();
+                mistakes = data ? Object.values(data) : [];
+                console.log('Loaded mistakes:', mistakes); // Debug log
                 renderMistakes();
                 updateDashboardStats();
+                updateRecentMistakes();
+                updateCharts();
             });
             
             // Load topics
             database.ref(`users/${userId}/topics`).on('value', snapshot => {
-                topics = snapshot.val() || [];
+                const data = snapshot.val();
+                topics = data ? Object.values(data) : [];
+                console.log('Loaded topics:', topics); // Debug log
                 renderTopics();
+                updateDashboardStats();
+                updateTopicsToImprove();
+                updateCharts();
+            });
+            
+            // Load tasks
+            database.ref(`users/${userId}/tasks`).on('value', snapshot => {
+                const data = snapshot.val();
+                tasks = data ? Object.values(data) : [];
+                console.log('Loaded tasks:', tasks); // Debug log
+                renderTasks();
                 updateDashboardStats();
             });
         }
 
         // Save data to Firebase
         function saveData(type, data) {
-            if (!currentUser) return;
+            console.log('saveData called with:', { type, data, currentUser: !!currentUser }); // Debug log
+            if (!currentUser) {
+                console.error('No current user, cannot save data');
+                return;
+            }
             const userId = currentUser.uid;
-            database.ref(`users/${userId}/${type}`).set(data);
+            
+            // Convert array data to object format for Firebase
+            const dataToSave = {};
+            if (Array.isArray(data)) {
+                data.forEach(item => {
+                    if (item.id) {
+                        dataToSave[item.id] = item;
+                    }
+                });
+            } else {
+                // If it's already an object, use as is
+                Object.assign(dataToSave, data);
+            }
+            
+            console.log('Saving to Firebase:', `users/${userId}/${type}`, dataToSave); // Debug log
+            database.ref(`users/${userId}/${type}`).set(dataToSave)
+                .then(() => {
+                    console.log('Data saved successfully to Firebase');
+                })
+                .catch((error) => {
+                    console.error('Error saving data to Firebase:', error);
+                });
         }
 
         // Navigation setup
         function setupNavigation() {
-            document.querySelectorAll('.nav-link').forEach(link => {
+            // Only target main navigation links in the sidebar, not task tabs
+            document.querySelectorAll('.sidebar .nav-link').forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
                     
                     // Update active link
-                    document.querySelectorAll('.nav-link').forEach(navLink => {
+                    document.querySelectorAll('.sidebar .nav-link').forEach(navLink => {
                         navLink.classList.remove('active');
                     });
                     this.classList.add('active');
@@ -882,15 +1326,942 @@ const firebaseConfig = {
                     });
                     
                     // Show selected section
-                    const sectionId = this.getAttribute('data-section') + '-section';
-                    document.getElementById(sectionId).style.display = 'block';
+                    const sectionAttribute = this.getAttribute('data-section');
+                    if (!sectionAttribute) {
+                        console.warn('Navigation link missing data-section attribute:', this);
+                        return;
+                    }
                     
-                    // Update charts when analytics is shown
+                    const sectionId = sectionAttribute + '-section';
+                    const sectionElement = document.getElementById(sectionId);
+                    if (sectionElement) {
+                        sectionElement.style.display = 'block';
+                    } else {
+                        console.warn('Section not found:', sectionId);
+                    }
+                    
+                    // Update charts when analytics section is shown
                     if (sectionId === 'analytics-section') {
-                        updateCharts();
+                        setTimeout(() => {
+                            updateCharts();
+                            updateDailyProgressAnalytics();
+                            updateAdvancedAnalytics();
+                        }, 100);
                     }
                 });
             });
+        }
+
+        // Task Manager Setup
+        function setupTaskManager() {
+            // Add Task Button
+            document.getElementById('add-task-btn').addEventListener('click', function() {
+                // Reset form and set default date to today
+                document.getElementById('taskForm').reset();
+                document.getElementById('taskDueDate').value = new Date().toISOString().split('T')[0];
+                document.getElementById('saveTask').textContent = 'Save Task';
+                document.getElementById('saveTask').onclick = saveNewTask;
+                
+                const modal = new bootstrap.Modal(document.getElementById('taskModal'));
+                modal.show();
+            });
+
+            // Save Task
+            function saveNewTask() {
+                const newTask = {
+                    id: tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1,
+                    name: document.getElementById('taskName').value,
+                    type: document.getElementById('taskType').value,
+                    target: parseInt(document.getElementById('taskTarget').value) || 1,
+                    completed: 0,
+                    priority: parseInt(document.getElementById('taskPriority').value) || 3,
+                    dueDate: document.getElementById('taskDueDate').value,
+                    topic: document.getElementById('taskTopic').value || '',
+                    notes: document.getElementById('taskNotes').value || '',
+                    status: 'pending',
+                    createdAt: new Date().toISOString()
+                };
+                
+                tasks.push(newTask);
+                saveData('tasks', tasks);
+                
+                // Close modal
+                bootstrap.Modal.getInstance(document.getElementById('taskModal')).hide();
+            }
+
+            // Task tab navigation
+            document.querySelectorAll('[data-task-tab]').forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Update active tab
+                    document.querySelectorAll('[data-task-tab]').forEach(t => {
+                        t.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    // Filter tasks
+                    const tab = this.getAttribute('data-task-tab');
+                    renderTasks(tab);
+                });
+            });
+        }
+
+        // Render tasks with optional filtering
+        function renderTasks(filter = 'active') {
+            const table = document.getElementById('task-table');
+            table.innerHTML = '';
+            
+            let filteredTasks = tasks;
+            
+            // Apply filter
+            if (filter === 'active') {
+                filteredTasks = tasks.filter(t => t.status !== 'completed');
+            } else if (filter === 'completed') {
+                filteredTasks = tasks.filter(t => t.status === 'completed');
+            }
+            
+            if (filteredTasks.length === 0) {
+                table.innerHTML = '<tr><td colspan="7" class="text-center">No tasks found</td></tr>';
+                return;
+            }
+            
+            // Sort tasks by priority and due date
+            filteredTasks.sort((a, b) => {
+                if (a.priority !== b.priority) return b.priority - a.priority;
+                if (!a.dueDate && !b.dueDate) return 0;
+                if (!a.dueDate) return 1;
+                if (!b.dueDate) return -1;
+                return new Date(a.dueDate) - new Date(b.dueDate);
+            });
+            
+            filteredTasks.forEach(task => {
+                const row = document.createElement('tr');
+                row.setAttribute('data-id', task.id);
+                
+                if (task.status === 'completed') {
+                    row.classList.add('completed-task');
+                }
+                
+                // Calculate progress
+                const progress = task.completed / task.target * 100;
+                const progressColor = progress >= 100 ? 'bg-success' : 
+                                    progress >= 50 ? 'bg-primary' : 'bg-warning';
+                
+                // Format due date
+                let dueDateDisplay = task.dueDate || 'No deadline';
+                if (task.dueDate) {
+                    const dueDate = new Date(task.dueDate);
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    
+                    if (dueDate < today && task.status !== 'completed') {
+                        dueDateDisplay = `<span class="text-danger">${task.dueDate} (Overdue)</span>`;
+                    } else {
+                        dueDateDisplay = task.dueDate;
+                    }
+                }
+                
+                row.innerHTML = `
+                    <td>${task.name} ${task.topic ? `<br><small class="text-muted">Topic: ${task.topic}</small>` : ''}</td>
+                    <td>${formatTaskType(task.type)}</td>
+                    <td>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar ${progressColor}" role="progressbar" 
+                                style="width: ${progress}%" aria-valuenow="${progress}" 
+                                aria-valuemin="0" aria-valuemax="100">
+                                ${task.completed}/${task.target}
+                            </div>
+                        </div>
+                    </td>
+                    <td>${'⭐'.repeat(task.priority)}</td>
+                    <td>${dueDateDisplay}</td>
+                    <td>
+                        <select class="form-select form-select-sm task-status" data-id="${task.id}">
+                            <option value="pending" ${task.status === 'pending' ? 'selected' : ''}>Pending</option>
+                            <option value="in-progress" ${task.status === 'in-progress' ? 'selected' : ''}>In Progress</option>
+                            <option value="completed" ${task.status === 'completed' ? 'selected' : ''}>Completed</option>
+                        </select>
+                    </td>
+                    <td class="text-muted" style="max-width: 200px;">
+                        <small>${task.notes ? task.notes.substring(0, 50) + (task.notes.length > 50 ? '...' : '') : '-'}</small>
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-success increment-task" data-id="${task.id}" title="Add +1" ${task.status === 'completed' ? 'disabled' : ''}>
+                                <i class="bi bi-plus"></i>
+                            </button>
+                            <button class="btn btn-warning decrement-task" data-id="${task.id}" title="Subtract -1" ${task.completed === 0 ? 'disabled' : ''}>
+                                <i class="bi bi-dash"></i>
+                            </button>
+                            <button class="btn btn-primary edit-task" data-id="${task.id}" title="Edit">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-danger delete-task" data-id="${task.id}" title="Delete">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                
+                table.appendChild(row);
+            });
+            
+            // Add event listeners
+            document.querySelectorAll('.increment-task').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const taskId = parseInt(this.getAttribute('data-id'));
+                    const task = tasks.find(t => t.id === taskId);
+                    if (task && task.completed < task.target) {
+                        task.completed++;
+                        if (task.completed >= task.target) {
+                            task.status = 'completed';
+                        }
+                        saveData('tasks', tasks);
+                    }
+                });
+            });
+            
+            document.querySelectorAll('.decrement-task').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const taskId = parseInt(this.getAttribute('data-id'));
+                    const task = tasks.find(t => t.id === taskId);
+                    if (task && task.completed > 0) {
+                        task.completed--;
+                        if (task.completed < task.target) {
+                            task.status = 'in-progress';
+                        }
+                        saveData('tasks', tasks);
+                    }
+                });
+            });
+            
+            document.querySelectorAll('.delete-task').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const taskId = parseInt(this.getAttribute('data-id'));
+                    tasks = tasks.filter(t => t.id !== taskId);
+                    saveData('tasks', tasks);
+                });
+            });
+            
+            document.querySelectorAll('.edit-task').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const taskId = parseInt(this.getAttribute('data-id'));
+                    const task = tasks.find(t => t.id === taskId);
+                    if (task) {
+                        // Populate the task form
+                        document.getElementById('taskName').value = task.name;
+                        document.getElementById('taskType').value = task.type;
+                        document.getElementById('taskTarget').value = task.target;
+                        document.getElementById('taskPriority').value = task.priority;
+                        document.getElementById('taskDueDate').value = task.dueDate;
+                        document.getElementById('taskTopic').value = task.topic || '';
+                        document.getElementById('taskNotes').value = task.notes || '';
+                        
+                        // Change save button to update
+                        document.getElementById('saveTask').textContent = 'Update Task';
+                        document.getElementById('saveTask').onclick = function() {
+                            task.name = document.getElementById('taskName').value;
+                            task.type = document.getElementById('taskType').value;
+                            task.target = parseInt(document.getElementById('taskTarget').value) || 1;
+                            task.priority = parseInt(document.getElementById('taskPriority').value) || 3;
+                            task.dueDate = document.getElementById('taskDueDate').value;
+                            task.topic = document.getElementById('taskTopic').value || '';
+                            task.notes = document.getElementById('taskNotes').value || '';
+                            
+                            saveData('tasks', tasks);
+                            bootstrap.Modal.getInstance(document.getElementById('taskModal')).hide();
+                        };
+                        
+                        // Show the modal
+                        const modal = new bootstrap.Modal(document.getElementById('taskModal'));
+                        modal.show();
+                    }
+                });
+            });
+            
+            document.querySelectorAll('.task-status').forEach(select => {
+                select.addEventListener('change', function() {
+                    const taskId = parseInt(this.getAttribute('data-id'));
+                    const task = tasks.find(t => t.id === taskId);
+                    if (task) {
+                        task.status = this.value;
+                        if (this.value === 'completed' && task.completed < task.target) {
+                            task.completed = task.target;
+                        }
+                        saveData('tasks', tasks);
+                    }
+                });
+            });
+            
+            // Update active tasks in dashboard
+            updateActiveTasks();
+        }
+
+        function formatTaskType(type) {
+            const types = {
+                'problem-solving': 'Problem Solving',
+                'topic-learning': 'Topic Learning',
+                'contest-prep': 'Contest Prep',
+                'other': 'Other'
+            };
+            return types[type] || type;
+        }
+
+        function updateActiveTasks() {
+            const activeTasksContainer = document.getElementById('active-tasks');
+            activeTasksContainer.innerHTML = '';
+            
+            const activeTasks = tasks.filter(t => t.status !== 'completed').slice(0, 5);
+            
+            if (activeTasks.length === 0) {
+                activeTasksContainer.innerHTML = '<div class="text-center text-muted">No active tasks</div>';
+                return;
+            }
+            
+            activeTasks.forEach(task => {
+                const progress = task.completed / task.target * 100;
+                const progressColor = progress >= 100 ? 'bg-success' : 
+                                    progress >= 50 ? 'bg-primary' : 'bg-warning';
+                
+                const taskEl = document.createElement('div');
+                taskEl.className = 'card mb-2 task-card';
+                taskEl.innerHTML = `
+                    <div class="card-body">
+                        <h6 class="card-title">${task.name}</h6>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <small class="text-muted">${formatTaskType(task.type)}</small>
+                                ${task.topic ? `<br><small class="text-muted">Topic: ${task.topic}</small>` : ''}
+                            </div>
+                            <div>
+                                <span class="badge bg-${task.priority >= 3 ? 'danger' : 'warning'}">
+                                    ${'⭐'.repeat(task.priority)}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="progress mt-2" style="height: 10px;">
+                            <div class="progress-bar ${progressColor}" 
+                                style="width: ${progress}%"></div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-2">
+                            <small>${task.completed}/${task.target}</small>
+                            <small>${task.dueDate ? `Due: ${task.dueDate}` : 'No deadline'}</small>
+                        </div>
+                    </div>
+                `;
+                
+                activeTasksContainer.appendChild(taskEl);
+            });
+        }
+
+        // Update recent contests
+        function updateRecentContests() {
+            const container = document.getElementById('recent-contests');
+            container.innerHTML = '';
+            
+            if (contests.length === 0) {
+                container.innerHTML = '<div class="text-center text-muted p-3">No contests yet</div>';
+                return;
+            }
+            
+            // Sort by date descending and take first 5
+            const recentContests = [...contests]
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .slice(0, 5);
+            
+            recentContests.forEach(contest => {
+                const item = document.createElement('div');
+                item.className = 'recent-item';
+                
+                // Format rating change with color
+                let ratingChange = contest.rating_change || 0;
+                let ratingClass = ratingChange > 0 ? 'text-success' : ratingChange < 0 ? 'text-danger' : 'text-muted';
+                let ratingDisplay = ratingChange > 0 ? `+${ratingChange}` : ratingChange;
+                
+                item.innerHTML = `
+                    <div class="d-flex justify-content-between">
+                        <strong>${contest.contest_name}</strong>
+                        <span class="badge bg-secondary">${contest.platform}</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <small>${contest.date}</small>
+                        <small class="${ratingClass}">${ratingDisplay}</small>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <small>Solved: ${contest.solved}</small>
+                        <small>Rank: ${contest.rank || '-'}</small>
+                    </div>
+                `;
+                
+                container.appendChild(item);
+            });
+        }
+
+        // Update recent mistakes
+        function updateRecentMistakes() {
+            const container = document.getElementById('recent-mistakes');
+            container.innerHTML = '';
+            
+            if (mistakes.length === 0) {
+                container.innerHTML = '<div class="text-center text-muted p-3">No mistakes yet</div>';
+                return;
+            }
+            
+            // Sort by date descending and take first 5
+            const recentMistakes = [...mistakes]
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .slice(0, 5);
+            
+            recentMistakes.forEach(mistake => {
+                const item = document.createElement('div');
+                item.className = 'recent-item';
+                
+                item.innerHTML = `
+                    <div class="d-flex justify-content-between">
+                        <strong>${mistake.problem}</strong>
+                        <span class="badge bg-secondary">${mistake.platform}</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <small>${mistake.date}</small>
+                        <small class="text-danger">${mistake.mistake_type}</small>
+                    </div>
+                    <div><small>${mistake.reason}</small></div>
+                `;
+                
+                container.appendChild(item);
+            });
+        }
+
+        // Update topics to improve
+        function updateTopicsToImprove() {
+            const container = document.getElementById('topics-to-improve');
+            container.innerHTML = '';
+            
+            if (topics.length === 0) {
+                container.innerHTML = '<div class="text-center text-muted p-3">No topics yet</div>';
+                return;
+            }
+            
+            // Filter topics with confidence <= 3 and sort by confidence ascending
+            const topicsToImprove = [...topics]
+                .filter(topic => topic.confidence <= 3)
+                .sort((a, b) => a.confidence - b.confidence)
+                .slice(0, 5);
+            
+            if (topicsToImprove.length === 0) {
+                container.innerHTML = '<div class="text-center text-muted p-3">All topics look good!</div>';
+                return;
+            }
+            
+            topicsToImprove.forEach(topic => {
+                const item = document.createElement('div');
+                item.className = 'topic-to-improve';
+                
+                item.innerHTML = `
+                    <div>
+                        <strong>${topic.topic}</strong>
+                        <div class="confidence-stars">
+                            ${'★'.repeat(topic.confidence)}${'☆'.repeat(5 - topic.confidence)}
+                        </div>
+                    </div>
+                    <div>
+                        <small>${topic.solved} solved</small>
+                    </div>
+                `;
+                
+                container.appendChild(item);
+            });
+        }
+
+        // Update daily progress analytics
+        function updateDailyProgressAnalytics() {
+            const today = new Date().toISOString().split('T')[0];
+            const threeDaysAgo = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+            const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+            // Calculate today's progress
+            const todayLogs = dailyLogs.filter(log => log.date === today);
+            const todayProgress = todayLogs.reduce((sum, log) => 
+                sum + (parseInt(log.cf_solved) || 0) + (parseInt(log.ac_solved) || 0), 0
+            );
+
+            // Calculate 3-day progress
+            const threeDayLogs = dailyLogs.filter(log => log.date >= threeDaysAgo);
+            const threeDayProgress = threeDayLogs.reduce((sum, log) => 
+                sum + (parseInt(log.cf_solved) || 0) + (parseInt(log.ac_solved) || 0), 0
+            );
+
+            // Calculate weekly progress
+            const weekLogs = dailyLogs.filter(log => log.date >= weekAgo);
+            const weekProgress = weekLogs.reduce((sum, log) => 
+                sum + (parseInt(log.cf_solved) || 0) + (parseInt(log.ac_solved) || 0), 0
+            );
+
+            // Calculate topics practiced in last 3 days
+            const topicsInThreeDays = topics.filter(topic => 
+                topic.last_practiced >= threeDaysAgo
+            ).length;
+
+            // Update the display
+            document.getElementById('today-progress').textContent = todayProgress;
+            document.getElementById('three-days-progress').textContent = threeDayProgress;
+            document.getElementById('week-progress').textContent = weekProgress;
+            document.getElementById('topics-three-days').textContent = topicsInThreeDays;
+        }
+
+        // Update daily progress chart
+        let dailyProgressChart, topicTimelineChart;
+        function updateDailyProgressChart(days = 7) {
+            const ctx = document.getElementById('dailyProgressChart').getContext('2d');
+            if (dailyProgressChart) dailyProgressChart.destroy();
+
+            // Generate last N days
+            const dates = [];
+            const problemsSolved = [];
+            const contestData = [];
+
+            for (let i = days - 1; i >= 0; i--) {
+                const date = new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+                dates.push(date);
+
+                // Find daily log for this date
+                const dayLog = dailyLogs.find(log => log.date === date);
+                const dayProblems = dayLog ? 
+                    (parseInt(dayLog.cf_solved) || 0) + (parseInt(dayLog.ac_solved) || 0) : 0;
+                problemsSolved.push(dayProblems);
+
+                // Check if there was a contest this day
+                const dayContest = contests.find(contest => contest.date === date);
+                contestData.push(dayContest ? parseInt(dayContest.solved) || 0 : 0);
+            }
+
+            dailyProgressChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates.map(date => new Date(date).toLocaleDateString('en-US', {month: 'short', day: 'numeric'})),
+                    datasets: [{
+                        label: 'Daily Practice',
+                        data: problemsSolved,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        tension: 0.1,
+                        fill: true
+                    }, {
+                        label: 'Contest Problems',
+                        data: contestData,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        tension: 0.1,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `Daily Progress - Last ${days} Days`
+                        },
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Problems Solved'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update topic timeline chart
+        function updateTopicTimelineChart() {
+            const ctx = document.getElementById('topicTimelineChart').getContext('2d');
+            if (topicTimelineChart) topicTimelineChart.destroy();
+
+            // Get topics practiced in last 30 days
+            const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+            const recentTopics = topics.filter(topic => topic.last_practiced >= thirtyDaysAgo);
+
+            // Group by date
+            const topicsByDate = {};
+            recentTopics.forEach(topic => {
+                const date = topic.last_practiced;
+                if (!topicsByDate[date]) {
+                    topicsByDate[date] = 0;
+                }
+                topicsByDate[date]++;
+            });
+
+            // Generate last 30 days
+            const dates = [];
+            const topicCounts = [];
+
+            for (let i = 29; i >= 0; i--) {
+                const date = new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+                dates.push(date);
+                topicCounts.push(topicsByDate[date] || 0);
+            }
+
+            topicTimelineChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: dates.map(date => new Date(date).toLocaleDateString('en-US', {month: 'short', day: 'numeric'})),
+                    datasets: [{
+                        label: 'Topics Practiced',
+                        data: topicCounts,
+                        backgroundColor: 'rgba(255, 206, 86, 0.6)',
+                        borderColor: 'rgba(255, 206, 86, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Topic Learning Timeline (Last 30 Days)'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            },
+                            title: {
+                                display: true,
+                                text: 'Topics Practiced'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update charts for analytics
+        function updateCharts() {
+            // Update daily progress analytics
+            updateDailyProgressAnalytics();
+            updateDailyProgressChart();
+            updateTopicTimelineChart();
+            // Problems solved chart
+            const solvedCtx = document.getElementById('solvedChart').getContext('2d');
+            if (solvedChart) solvedChart.destroy();
+            
+            const solvedData = {
+                labels: ['Codeforces', 'AtCoder', 'LeetCode', 'Other'],
+                datasets: [{
+                    label: 'Problems Solved',
+                    data: [
+                        dailyLogs.reduce((sum, log) => sum + (parseInt(log.cf_solved) || 0), 0),
+                        dailyLogs.reduce((sum, log) => sum + (parseInt(log.ac_solved) || 0), 0),
+                        0, // LeetCode data not tracked in current implementation
+                        0  // Other platforms data not tracked in current implementation
+                    ],
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(75, 192, 192, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            };
+            
+            solvedChart = new Chart(solvedCtx, {
+                type: 'bar',
+                data: solvedData,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Problems Solved by Platform'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            // Mistakes chart
+            const mistakesCtx = document.getElementById('mistakesChart').getContext('2d');
+            if (mistakesChart) mistakesChart.destroy();
+            
+            const mistakeTypes = ['WA', 'TLE', 'MLE', 'RE', 'CE', 'Other'];
+            const mistakeCounts = mistakeTypes.map(type => 
+                mistakes.filter(m => m.mistake_type === type).length
+            );
+            
+            mistakesChart = new Chart(mistakesCtx, {
+                type: 'pie',
+                data: {
+                    labels: mistakeTypes,
+                    datasets: [{
+                        label: 'Mistakes by Type',
+                        data: mistakeCounts,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.5)',
+                            'rgba(54, 162, 235, 0.5)',
+                            'rgba(255, 206, 86, 0.5)',
+                            'rgba(75, 192, 192, 0.5)',
+                            'rgba(153, 102, 255, 0.5)',
+                            'rgba(201, 203, 207, 0.5)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(201, 203, 207, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Mistakes by Type'
+                        }
+                    }
+                }
+            });
+            
+            // Topics confidence chart
+            const topicsCtx = document.getElementById('topicsChart').getContext('2d');
+            if (topicsChart) topicsChart.destroy();
+            
+            const confidenceLevels = [1, 2, 3, 4, 5];
+            const topicCounts = confidenceLevels.map(level => 
+                topics.filter(t => t.confidence == level).length
+            );
+            
+            topicsChart = new Chart(topicsCtx, {
+                type: 'line',
+                data: {
+                    labels: confidenceLevels.map(l => `Level ${l}`),
+                    datasets: [{
+                        label: 'Topics by Confidence Level',
+                        data: topicCounts,
+                        fill: false,
+                        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Topics by Confidence Level'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Setup analytics time period buttons
+        function setupAnalyticsButtons() {
+            document.getElementById('progress-7days').addEventListener('click', function() {
+                document.querySelectorAll('[id^="progress-"]').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                updateDailyProgressChart(7);
+            });
+
+            document.getElementById('progress-14days').addEventListener('click', function() {
+                document.querySelectorAll('[id^="progress-"]').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                updateDailyProgressChart(14);
+            });
+
+            document.getElementById('progress-30days').addEventListener('click', function() {
+                document.querySelectorAll('[id^="progress-"]').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                updateDailyProgressChart(30);
+            });
+        }
+
+        // Render functions for other sections (contests, daily logs, mistakes, topics)
+        function renderContests() {
+            const table = document.getElementById('contest-table');
+            table.innerHTML = '';
+            
+            if (contests.length === 0) {
+                table.innerHTML = '<tr><td colspan="9" class="text-center">No contests yet</td></tr>';
+                return;
+            }
+            
+            contests.forEach(contest => {
+                const row = document.createElement('tr');
+                row.setAttribute('data-id', contest.id);
+                
+                row.innerHTML = `
+                    <td class="editable" data-field="date">${contest.date}</td>
+                    <td class="editable" data-field="platform">${contest.platform}</td>
+                    <td class="editable" data-field="contest_name">${contest.contest_name}</td>
+                    <td class="editable" data-field="solved">${contest.solved}</td>
+                    <td class="editable" data-field="rating_change">${contest.rating_change}</td>
+                    <td class="editable" data-field="rank">${contest.rank}</td>
+                    <td class="editable" data-field="upsolved">${contest.upsolved}</td>
+                    <td class="editable" data-field="notes">${contest.notes}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger delete-contest"><i class="bi bi-trash"></i></button>
+                    </td>
+                `;
+                
+                table.appendChild(row);
+            });
+            
+            updateDashboardStats();
+            updateRecentContests();
+        }
+        
+        function renderDailyLogs() {
+            const table = document.getElementById('daily-table');
+            table.innerHTML = '';
+            
+            if (dailyLogs.length === 0) {
+                table.innerHTML = '<tr><td colspan="7" class="text-center">No daily logs yet</td></tr>';
+                return;
+            }
+            
+            dailyLogs.forEach(log => {
+                const row = document.createElement('tr');
+                row.setAttribute('data-id', log.id);
+                
+                row.innerHTML = `
+                    <td class="editable" data-field="date">${log.date}</td>
+                    <td class="editable" data-field="cf_solved">${log.cf_solved || ''}</td>
+                    <td class="editable" data-field="ac_solved">${log.ac_solved || ''}</td>
+                    <td class="editable" data-field="hours">${log.hours || ''}</td>
+                    <td class="editable" data-field="contest">${log.contest || ''}</td>
+                    <td class="editable" data-field="notes">${log.notes || ''}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger delete-daily"><i class="bi bi-trash"></i></button>
+                    </td>
+                `;
+                
+                table.appendChild(row);
+            });
+            
+            updateDashboardStats();
+        }
+        
+        function renderMistakes() {
+            const table = document.getElementById('mistake-table');
+            table.innerHTML = '';
+            
+            if (mistakes.length === 0) {
+                table.innerHTML = '<tr><td colspan="7" class="text-center">No mistakes yet</td></tr>';
+                return;
+            }
+            
+            mistakes.forEach(mistake => {
+                const row = document.createElement('tr');
+                row.setAttribute('data-id', mistake.id);
+                
+                row.innerHTML = `
+                    <td class="editable" data-field="date">${mistake.date}</td>
+                    <td class="editable" data-field="platform">${mistake.platform}</td>
+                    <td class="editable" data-field="problem">${mistake.problem}</td>
+                    <td class="editable" data-field="mistake_type">${mistake.mistake_type}</td>
+                    <td class="editable" data-field="reason">${mistake.reason}</td>
+                    <td class="editable" data-field="fix_strategy">${mistake.fix_strategy}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger delete-mistake"><i class="bi bi-trash"></i></button>
+                    </td>
+                `;
+                
+                table.appendChild(row);
+            });
+            
+            updateDashboardStats();
+            updateRecentMistakes();
+        }
+        
+        function renderTopics() {
+            const table = document.getElementById('topic-table');
+            table.innerHTML = '';
+            
+            if (topics.length === 0) {
+                table.innerHTML = '<tr><td colspan="6" class="text-center">No topics yet</td></tr>';
+                return;
+            }
+            
+            topics.forEach(topic => {
+                const row = document.createElement('tr');
+                row.setAttribute('data-id', topic.id);
+                
+                row.innerHTML = `
+                    <td class="editable" data-field="topic">${topic.topic}</td>
+                    <td class="editable" data-field="solved">${topic.solved}</td>
+                    <td class="editable" data-field="confidence">${topic.confidence}</td>
+                    <td class="editable" data-field="last_practiced">${topic.last_practiced}</td>
+                    <td class="editable" data-field="notes">${topic.notes || ''}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger delete-topic"><i class="bi bi-trash"></i></button>
+                    </td>
+                `;
+                
+                table.appendChild(row);
+            });
+            
+            updateDashboardStats();
+            updateTopicsToImprove();
+        }
+
+        // Update dashboard stats
+        function updateDashboardStats() {
+            // Total contests
+            document.getElementById('total-contests').textContent = contests.length;
+            
+            // Total problems solved
+            const contestSolved = contests.reduce((sum, contest) => sum + (parseInt(contest.solved) || 0), 0);
+            const dailySolved = dailyLogs.reduce((sum, log) => sum + (parseInt(log.cf_solved) || 0) + (parseInt(log.ac_solved) || 0), 0);
+            document.getElementById('total-solved').textContent = contestSolved + dailySolved;
+            
+            // Total mistakes
+            document.getElementById('total-mistakes').textContent = mistakes.length;
+            
+            // Total topics
+            document.getElementById('total-topics').textContent = topics.length;
+            
+            // Update active tasks
+            updateActiveTasks();
         }
 
         // Modal setups
@@ -989,7 +2360,11 @@ const firebaseConfig = {
                 const id = parseInt(row.getAttribute('data-id'));
                 const field = cell.getAttribute('data-field');
                 const currentValue = cell.textContent.trim();
-                const type = row.closest('table').id.split('-')[0];
+                
+                // Get type from the tbody id instead of table id
+                const tbody = row.closest('tbody');
+                const tableId = tbody ? tbody.id : '';
+                const type = tableId.split('-')[0]; // e.g., 'contest-table' -> 'contest'
                 
                 // Set modal title based on type
                 let title = '';
@@ -1092,43 +2467,137 @@ const firebaseConfig = {
                 // Show modal
                 const editModal = new bootstrap.Modal(document.getElementById('editModal'));
                 editModal.show();
-            });
-            
-            // Save edit
-            document.getElementById('saveEdit').addEventListener('click', function() {
-                const id = parseInt(document.getElementById('editId').value);
-                const type = document.getElementById('editType').value;
-                const field = document.getElementById('editField').value;
-                const newValue = document.getElementById('editValue').value;
                 
-                if (type === 'contest') {
-                    const contest = contests.find(c => c.id === id);
-                    if (contest) {
-                        contest[field] = newValue;
-                        saveData('contests', contests);
-                    }
-                } else if (type === 'daily') {
-                    const log = dailyLogs.find(l => l.id === id);
-                    if (log) {
-                        log[field] = newValue;
-                        saveData('dailyLogs', dailyLogs);
-                    }
-                } else if (type === 'mistake') {
-                    const mistake = mistakes.find(m => m.id === id);
-                    if (mistake) {
-                        mistake[field] = newValue;
-                        saveData('mistakes', mistakes);
-                    }
-                } else if (type === 'topic') {
-                    const topic = topics.find(t => t.id === id);
-                    if (topic) {
-                        topic[field] = newValue;
-                        saveData('topics', topics);
-                    }
+                // Re-attach save handler after modal is shown (only once)
+                const modalElement = editModal._element;
+                if (!modalElement.hasAttribute('data-save-handler-attached')) {
+                    modalElement.addEventListener('shown.bs.modal', function() {
+                        // Small delay to ensure DOM is ready
+                        setTimeout(() => {
+                            setupSaveEditHandler();
+                        }, 100);
+                    });
+                    modalElement.setAttribute('data-save-handler-attached', 'true');
                 }
-                
-                bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
             });
+        }
+
+        // Set up save edit functionality separately
+        function setupSaveEditHandler() {
+            // Direct event listener on the save button
+            const saveEditBtn = document.getElementById('saveEdit');
+            if (saveEditBtn) {
+                // Remove any existing listeners first
+                const clonedBtn = saveEditBtn.cloneNode(true);
+                saveEditBtn.parentNode.replaceChild(clonedBtn, saveEditBtn);
+                
+                // Add the listener to the cloned button
+                const newSaveBtn = document.getElementById('saveEdit');
+                newSaveBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleSaveEdit();
+                });
+            }
+        }
+
+        // Handle save edit functionality
+        function handleSaveEdit() {
+            console.log('handleSaveEdit called'); // Debug log
+            
+            const id = parseInt(document.getElementById('editId').value);
+            const type = document.getElementById('editType').value;
+            const field = document.getElementById('editField').value;
+            const newValue = document.getElementById('editValue').value;
+            
+            console.log('Edit data:', { id, type, field, newValue }); // Debug log
+            console.log('Current data arrays:', { contests: contests.length, dailyLogs: dailyLogs.length, mistakes: mistakes.length, topics: topics.length }); // Debug log
+            
+            let itemFound = false;
+            
+            if (type === 'contest') {
+                const contest = contests.find(c => c.id === id);
+                console.log('Found contest:', contest); // Debug log
+                if (contest) {
+                    itemFound = true;
+                    // Convert numeric fields to proper types
+                    if (['solved', 'rating_change', 'rank'].includes(field)) {
+                        contest[field] = parseInt(newValue) || 0;
+                    } else {
+                        contest[field] = newValue;
+                    }
+                    console.log('Updated contest:', contest); // Debug log
+                    saveData('contests', contests);
+                    // Re-render after saving
+                    setTimeout(() => {
+                        renderContests();
+                    }, 500);
+                }
+            } else if (type === 'daily') {
+                const log = dailyLogs.find(l => l.id === id);
+                console.log('Found daily log:', log); // Debug log
+                if (log) {
+                    itemFound = true;
+                    // Convert numeric fields to proper types
+                    if (['cf_solved', 'ac_solved'].includes(field)) {
+                        log[field] = parseInt(newValue) || 0;
+                    } else if (field === 'hours') {
+                        log[field] = parseFloat(newValue) || 0;
+                    } else {
+                        log[field] = newValue;
+                    }
+                    console.log('Updated daily log:', log); // Debug log
+                    saveData('dailyLogs', dailyLogs);
+                    // Re-render after saving
+                    setTimeout(() => {
+                        renderDailyLogs();
+                    }, 500);
+                }
+            } else if (type === 'mistake') {
+                const mistake = mistakes.find(m => m.id === id);
+                console.log('Found mistake:', mistake); // Debug log
+                if (mistake) {
+                    itemFound = true;
+                    mistake[field] = newValue;
+                    console.log('Updated mistake:', mistake); // Debug log
+                    saveData('mistakes', mistakes);
+                    // Re-render after saving
+                    setTimeout(() => {
+                        renderMistakes();
+                    }, 500);
+                }
+            } else if (type === 'topic') {
+                const topic = topics.find(t => t.id === id);
+                console.log('Found topic:', topic); // Debug log
+                if (topic) {
+                    itemFound = true;
+                    // Convert numeric fields to proper types
+                    if (['solved', 'confidence'].includes(field)) {
+                        topic[field] = parseInt(newValue) || 0;
+                    } else {
+                        topic[field] = newValue;
+                    }
+                    console.log('Updated topic:', topic); // Debug log
+                    saveData('topics', topics);
+                    // Re-render after saving
+                    setTimeout(() => {
+                        renderTopics();
+                    }, 500);
+                }
+            }
+            
+            if (!itemFound) {
+                console.error('Item not found!', { id, type, field }); // Debug log
+            }
+            
+            // Close the modal
+            const editModal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
+            if (editModal) {
+                console.log('Closing modal'); // Debug log
+                editModal.hide();
+            } else {
+                console.error('Edit modal instance not found'); // Debug log
+            }
         }
 
         // Delete functionality
@@ -1169,332 +2638,168 @@ const firebaseConfig = {
             document.getElementById('dailyDate').value = today;
             document.getElementById('mistakeDate').value = today;
             document.getElementById('topicLastPracticed').value = today;
+            document.getElementById('taskDueDate').value = today;
         }
 
-        // Render functions
-        function renderContests() {
-            const table = document.getElementById('contest-table');
-            table.innerHTML = '';
-            
-            if (contests.length === 0) {
-                table.innerHTML = '<tr><td colspan="9" class="text-center">No contests yet</td></tr>';
-                return;
-            }
-            
-            contests.forEach(contest => {
-                const row = document.createElement('tr');
-                row.setAttribute('data-id', contest.id);
-                
-                row.innerHTML = `
-                    <td class="editable" data-field="date">${contest.date}</td>
-                    <td class="editable" data-field="platform">${contest.platform}</td>
-                    <td class="editable" data-field="contest_name">${contest.contest_name}</td>
-                    <td class="editable" data-field="solved">${contest.solved}</td>
-                    <td class="editable" data-field="rating_change">${contest.rating_change}</td>
-                    <td class="editable" data-field="rank">${contest.rank}</td>
-                    <td class="editable" data-field="upsolved">${contest.upsolved}</td>
-                    <td class="editable" data-field="notes">${contest.notes}</td>
-                    <td>
-                        <button class="btn btn-sm btn-danger delete-contest"><i class="bi bi-trash"></i></button>
-                    </td>
-                `;
-                
-                table.appendChild(row);
-            });
-            
-            updateDashboardStats();
-        }
-        
-        function renderDailyLogs() {
-            const table = document.getElementById('daily-table');
-            table.innerHTML = '';
-            
-            if (dailyLogs.length === 0) {
-                table.innerHTML = '<tr><td colspan="7" class="text-center">No daily logs yet</td></tr>';
-                return;
-            }
-            
-            dailyLogs.forEach(log => {
-                const row = document.createElement('tr');
-                row.setAttribute('data-id', log.id);
-                
-                row.innerHTML = `
-                    <td class="editable" data-field="date">${log.date}</td>
-                    <td class="editable" data-field="cf_solved">${log.cf_solved || ''}</td>
-                    <td class="editable" data-field="ac_solved">${log.ac_solved || ''}</td>
-                    <td class="editable" data-field="hours">${log.hours || ''}</td>
-                    <td class="editable" data-field="contest">${log.contest || ''}</td>
-                    <td class="editable" data-field="notes">${log.notes || ''}</td>
-                    <td>
-                        <button class="btn btn-sm btn-danger delete-daily"><i class="bi bi-trash"></i></button>
-                    </td>
-                `;
-                
-                table.appendChild(row);
-            });
-            
-            updateDashboardStats();
-        }
-        
-        function renderMistakes() {
-            const table = document.getElementById('mistake-table');
-            table.innerHTML = '';
-            
-            if (mistakes.length === 0) {
-                table.innerHTML = '<tr><td colspan="7" class="text-center">No mistakes yet</td></tr>';
-                return;
-            }
-            
-            mistakes.forEach(mistake => {
-                const row = document.createElement('tr');
-                row.setAttribute('data-id', mistake.id);
-                
-                row.innerHTML = `
-                    <td class="editable" data-field="date">${mistake.date}</td>
-                    <td class="editable" data-field="platform">${mistake.platform}</td>
-                    <td class="editable" data-field="problem">${mistake.problem}</td>
-                    <td class="editable" data-field="mistake_type">${mistake.mistake_type}</td>
-                    <td class="editable" data-field="reason">${mistake.reason}</td>
-                    <td class="editable" data-field="fix_strategy">${mistake.fix_strategy}</td>
-                    <td>
-                        <button class="btn btn-sm btn-danger delete-mistake"><i class="bi bi-trash"></i></button>
-                    </td>
-                `;
-                
-                table.appendChild(row);
-            });
-            
-            updateDashboardStats();
-        }
-        
-        function renderTopics() {
-            const table = document.getElementById('topic-table');
-            table.innerHTML = '';
-            
-            if (topics.length === 0) {
-                table.innerHTML = '<tr><td colspan="6" class="text-center">No topics yet</td></tr>';
-                return;
-            }
-            
-            topics.forEach(topic => {
-                const row = document.createElement('tr');
-                row.setAttribute('data-id', topic.id);
-                
-                row.innerHTML = `
-                    <td class="editable" data-field="topic">${topic.topic}</td>
-                    <td class="editable" data-field="solved">${topic.solved}</td>
-                    <td class="editable" data-field="confidence">${topic.confidence}</td>
-                    <td class="editable" data-field="last_practiced">${topic.last_practiced}</td>
-                    <td class="editable" data-field="notes">${topic.notes || ''}</td>
-                    <td>
-                        <button class="btn btn-sm btn-danger delete-topic"><i class="bi bi-trash"></i></button>
-                    </td>
-                `;
-                
-                table.appendChild(row);
-            });
-            
-            updateDashboardStats();
+        // Advanced Analytics Functions
+        function updateAdvancedAnalytics() {
+            updateAdvancedMetrics();
+            updateContestRatingChart();
+            updateSolvingVelocityChart();
+            updatePlatformChart();
+            updateTopicMasteryChart();
+            updateMistakeDistributionChart();
+            updateActivityHeatmap();
+            updateStudyTimeAnalysis();
+            generateSmartInsights();
         }
 
-        // Update dashboard stats
-        function updateDashboardStats() {
-            // Total contests
-            document.getElementById('total-contests').textContent = contests.length;
-            
-            // Total problems solved
-            const contestSolved = contests.reduce((sum, contest) => sum + (parseInt(contest.solved) || 0), 0);
-            const dailySolved = dailyLogs.reduce((sum, log) => sum + (parseInt(log.cf_solved) || 0) + (parseInt(log.ac_solved) || 0), 0);
-            document.getElementById('total-solved').textContent = contestSolved + dailySolved;
-            
-            // Total mistakes
-            document.getElementById('total-mistakes').textContent = mistakes.length;
-            
-            // Total topics
-            document.getElementById('total-topics').textContent = topics.length;
-            
-            // Recent contests
-            const recentContests = document.getElementById('recent-contests');
-            recentContests.innerHTML = '';
-            
-            if (contests.length === 0) {
-                recentContests.innerHTML = '<tr><td colspan="4" class="text-center">No contests yet</td></tr>';
-            } else {
-                contests.slice(0, 5).forEach(contest => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${contest.date}</td>
-                        <td>${contest.contest_name}</td>
-                        <td>${contest.solved}</td>
-                        <td>${contest.rating_change > 0 ? '+' : ''}${contest.rating_change}</td>
-                    `;
-                    recentContests.appendChild(row);
-                });
-            }
-            
-            // Recent mistakes
-            const recentMistakes = document.getElementById('recent-mistakes');
-            recentMistakes.innerHTML = '';
-            
-            if (mistakes.length === 0) {
-                recentMistakes.innerHTML = '<tr><td colspan="3" class="text-center">No mistakes yet</td></tr>';
-            } else {
-                mistakes.slice(0, 5).forEach(mistake => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${mistake.date}</td>
-                        <td>${mistake.problem}</td>
-                        <td>${mistake.reason}</td>
-                    `;
-                    recentMistakes.appendChild(row);
-                });
-            }
-            
-            // Topics to improve
-            const topicsToImprove = document.getElementById('topics-to-improve');
-            topicsToImprove.innerHTML = '';
-            
-            if (topics.length === 0) {
-                topicsToImprove.innerHTML = '<tr><td colspan="4" class="text-center">No topics yet</td></tr>';
-            } else {
-                // Sort by confidence (lowest first) and take top 5
-                const sortedTopics = [...topics].sort((a, b) => a.confidence - b.confidence).slice(0, 5);
-                
-                sortedTopics.forEach(topic => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${topic.topic}</td>
-                        <td>${topic.confidence}/5</td>
-                        <td>${topic.last_practiced}</td>
-                        <td>${topic.notes || ''}</td>
-                    `;
-                    topicsToImprove.appendChild(row);
-                });
-            }
+        function updateAdvancedMetrics() {
+            // Average rating change
+            const ratingChanges = contests.filter(c => c.rating_change && !isNaN(parseInt(c.rating_change)))
+                                          .map(c => parseInt(c.rating_change));
+            const avgRatingChange = ratingChanges.length > 0 ? 
+                Math.round(ratingChanges.reduce((a, b) => a + b, 0) / ratingChanges.length) : 0;
+            document.getElementById('avg-rating-change').textContent = avgRatingChange >= 0 ? `+${avgRatingChange}` : avgRatingChange;
+
+            // Problems per day
+            const totalProblems = dailyLogs.reduce((sum, log) => sum + (parseInt(log.cf_solved) || 0) + (parseInt(log.ac_solved) || 0), 0);
+            const daysWithData = dailyLogs.length || 1;
+            const problemsPerDay = (totalProblems / daysWithData).toFixed(1);
+            document.getElementById('problems-per-day').textContent = problemsPerDay;
+
+            // Contest accuracy (problems solved vs attempted)
+            const totalSolved = contests.reduce((sum, c) => sum + (parseInt(c.solved) || 0), 0);
+            const estimatedAttempted = totalSolved * 1.3; // Estimate based on typical contest performance
+            const accuracy = totalSolved > 0 ? Math.round((totalSolved / estimatedAttempted) * 100) : 0;
+            document.getElementById('contest-accuracy').textContent = `${accuracy}%`;
+
+            // Study streak
+            const streak = calculateStudyStreak();
+            document.getElementById('study-streak').textContent = `${streak} days`;
+
+            // Best rank
+            const ranks = contests.filter(c => c.rank && !isNaN(parseInt(c.rank))).map(c => parseInt(c.rank));
+            const bestRank = ranks.length > 0 ? Math.min(...ranks) : '-';
+            document.getElementById('best-rank').textContent = bestRank === '-' ? '-' : `#${bestRank}`;
+
+            // Improvement score
+            const improvementScore = calculateImprovementScore();
+            document.getElementById('improvement-score').textContent = `${improvementScore}%`;
         }
 
-        // Update charts
-        function updateCharts() {
-            // Problems Solved Over Time
-            const solvedCtx = document.getElementById('solvedChart').getContext('2d');
+        function calculateStudyStreak() {
+            if (dailyLogs.length === 0) return 0;
             
-            if (solvedChart) solvedChart.destroy();
+            const sortedLogs = dailyLogs.sort((a, b) => new Date(b.date) - new Date(a.date));
+            let streak = 0;
+            let currentDate = new Date();
             
-            // Group by month
-            const monthlyData = {};
-            const now = new Date();
-            
-            // Initialize last 6 months
-            for (let i = 5; i >= 0; i--) {
-                const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
-                const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-                monthlyData[monthKey] = 0;
-            }
-            
-            // Count problems solved from contests
-            contests.forEach(contest => {
-                const date = new Date(contest.date);
-                const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+            for (let log of sortedLogs) {
+                const logDate = new Date(log.date);
+                const daysDiff = Math.floor((currentDate - logDate) / (1000 * 60 * 60 * 24));
                 
-                if (monthlyData.hasOwnProperty(monthKey)) {
-                    monthlyData[monthKey] += parseInt(contest.solved) || 0;
+                if (daysDiff === streak) {
+                    streak++;
+                } else if (daysDiff > streak) {
+                    break;
                 }
-            });
+            }
             
-            // Count problems solved from daily logs
-            dailyLogs.forEach(log => {
-                if (!log.date) return;
-                
-                const date = new Date(log.date);
-                const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-                
-                if (monthlyData.hasOwnProperty(monthKey)) {
-                    monthlyData[monthKey] += (parseInt(log.cf_solved) || 0) + (parseInt(log.ac_solved) || 0);
-                }
-            });
+            return streak;
+        }
+
+        function calculateImprovementScore() {
+            if (contests.length < 2) return 0;
             
-            solvedChart = new Chart(solvedCtx, {
+            const recentContests = contests.slice(-5); // Last 5 contests
+            const olderContests = contests.slice(0, Math.max(1, contests.length - 5));
+            
+            const recentAvg = recentContests.reduce((sum, c) => sum + (parseInt(c.solved) || 0), 0) / recentContests.length;
+            const olderAvg = olderContests.reduce((sum, c) => sum + (parseInt(c.solved) || 0), 0) / olderContests.length;
+            
+            return olderAvg > 0 ? Math.round(((recentAvg - olderAvg) / olderAvg) * 100) : 0;
+        }
+
+        function updateContestRatingChart() {
+            const ctx = document.getElementById('contestRatingChart').getContext('2d');
+            
+            const sortedContests = contests.filter(c => c.rating_change && !isNaN(parseInt(c.rating_change)))
+                                          .sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            let cumulativeRating = 1500; // Starting rating
+            const data = sortedContests.map(contest => {
+                cumulativeRating += parseInt(contest.rating_change);
+                return {
+                    x: contest.date,
+                    y: cumulativeRating
+                };
+            });
+
+            new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: Object.keys(monthlyData),
                     datasets: [{
-                        label: 'Problems Solved',
-                        data: Object.values(monthlyData),
-                        backgroundColor: 'rgba(0, 123, 255, 0.2)',
-                        borderColor: 'rgba(0, 123, 255, 1)',
-                        borderWidth: 2,
-                        tension: 0.1,
-                        fill: true
+                        label: 'Rating Progress',
+                        data: data,
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                        fill: true,
+                        tension: 0.1
                     }]
                 },
                 options: {
                     responsive: true,
                     scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                parser: 'YYYY-MM-DD',
+                                displayFormats: {
+                                    day: 'MMM DD'
+                                }
+                            }
+                        },
                         y: {
-                            beginAtZero: true
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: 'Rating'
+                            }
                         }
-                    }
-                }
-            });
-            
-            // Mistake Types
-            const mistakesCtx = document.getElementById('mistakesChart').getContext('2d');
-            
-            if (mistakesChart) mistakesChart.destroy();
-            
-            // Count mistake types
-            const mistakeTypes = {};
-            mistakes.forEach(mistake => {
-                const type = mistake.mistake_type || 'Other';
-                mistakeTypes[type] = (mistakeTypes[type] || 0) + 1;
-            });
-            
-            mistakesChart = new Chart(mistakesCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(mistakeTypes),
-                    datasets: [{
-                        data: Object.values(mistakeTypes),
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.7)',
-                            'rgba(54, 162, 235, 0.7)',
-                            'rgba(255, 206, 86, 0.7)',
-                            'rgba(75, 192, 192, 0.7)',
-                            'rgba(153, 102, 255, 0.7)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
+                    },
                     plugins: {
                         legend: {
-                            position: 'right'
+                            display: true
                         }
                     }
                 }
             });
+        }
+
+        function updateSolvingVelocityChart() {
+            const ctx = document.getElementById('solvingVelocityChart').getContext('2d');
             
-            // Topic Confidence
-            const topicsCtx = document.getElementById('topicsChart').getContext('2d');
-            
-            if (topicsChart) topicsChart.destroy();
-            
-            // Prepare topic data
-            const topicData = {};
-            topics.forEach(topic => {
-                topicData[topic.topic] = parseInt(topic.confidence) || 3;
+            const last30Days = [...Array(30)].map((_, i) => {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                return date.toISOString().split('T')[0];
+            }).reverse();
+
+            const velocityData = last30Days.map(date => {
+                const log = dailyLogs.find(l => l.date === date);
+                return log ? (parseInt(log.cf_solved) || 0) + (parseInt(log.ac_solved) || 0) : 0;
             });
-            
-            topicsChart = new Chart(topicsCtx, {
+
+            new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: Object.keys(topicData),
+                    labels: last30Days.map(date => new Date(date).getDate()),
                     datasets: [{
-                        label: 'Confidence (1-5)',
-                        data: Object.values(topicData),
-                        backgroundColor: 'rgba(111, 66, 193, 0.7)',
-                        borderColor: 'rgba(111, 66, 193, 1)',
+                        label: 'Problems Solved',
+                        data: velocityData,
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
                         borderWidth: 1
                     }]
                 },
@@ -1503,12 +2808,297 @@ const firebaseConfig = {
                     scales: {
                         y: {
                             beginAtZero: true,
-                            max: 5
+                            title: {
+                                display: true,
+                                text: 'Problems'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Day of Month'
+                            }
                         }
                     }
                 }
             });
         }
+
+        function updatePlatformChart() {
+            const ctx = document.getElementById('platformChart').getContext('2d');
+            
+            const platformCounts = {};
+            contests.forEach(contest => {
+                platformCounts[contest.platform] = (platformCounts[contest.platform] || 0) + 1;
+            });
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(platformCounts),
+                    datasets: [{
+                        data: Object.values(platformCounts),
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.8)',
+                            'rgba(54, 162, 235, 0.8)',
+                            'rgba(255, 206, 86, 0.8)',
+                            'rgba(75, 192, 192, 0.8)',
+                            'rgba(153, 102, 255, 0.8)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateTopicMasteryChart() {
+            const ctx = document.getElementById('topicMasteryChart').getContext('2d');
+            
+            if (topics.length === 0) {
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                ctx.font = '16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('No topic data available', ctx.canvas.width/2, ctx.canvas.height/2);
+                return;
+            }
+
+            const topicNames = topics.slice(0, 6).map(t => t.topic); // Top 6 topics
+            const confidenceScores = topics.slice(0, 6).map(t => parseInt(t.confidence) || 0);
+
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: topicNames,
+                    datasets: [{
+                        label: 'Mastery Level',
+                        data: confidenceScores,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(255, 99, 132, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: false
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 5
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateMistakeDistributionChart() {
+            const ctx = document.getElementById('mistakeDistributionChart').getContext('2d');
+            
+            const mistakeTypes = ['WA', 'TLE', 'MLE', 'RE', 'CE', 'Other'];
+            const mistakeCounts = mistakeTypes.map(type => 
+                mistakes.filter(m => m.mistake_type === type).length
+            );
+
+            new Chart(ctx, {
+                type: 'polarArea',
+                data: {
+                    labels: mistakeTypes,
+                    datasets: [{
+                        data: mistakeCounts,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.7)',
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(255, 206, 86, 0.7)',
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(153, 102, 255, 0.7)',
+                            'rgba(255, 159, 64, 0.7)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateActivityHeatmap() {
+            const heatmapContainer = document.getElementById('activityHeatmap');
+            const period = document.getElementById('heatmapPeriod').value;
+            
+            let days;
+            switch(period) {
+                case '3months': days = 90; break;
+                case '6months': days = 180; break;
+                case '1year': days = 365; break;
+                default: days = 90;
+            }
+
+            const today = new Date();
+            const heatmapData = [];
+            
+            for (let i = days - 1; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toISOString().split('T')[0];
+                
+                const log = dailyLogs.find(l => l.date === dateStr);
+                const activity = log ? (parseInt(log.cf_solved) || 0) + (parseInt(log.ac_solved) || 0) : 0;
+                
+                let level = 0;
+                if (activity > 0) level = 1;
+                if (activity >= 3) level = 2;
+                if (activity >= 5) level = 3;
+                if (activity >= 8) level = 4;
+                
+                heatmapData.push({ date: dateStr, level, activity });
+            }
+
+            // Create heatmap visualization
+            let heatmapHTML = '<div style="display: flex; flex-wrap: wrap; gap: 2px;">';
+            heatmapData.forEach(day => {
+                heatmapHTML += `<div class="heatmap-day level-${day.level}" 
+                                     title="${day.date}: ${day.activity} problems"></div>`;
+            });
+            heatmapHTML += '</div>';
+            
+            heatmapContainer.innerHTML = heatmapHTML;
+        }
+
+        function updateStudyTimeAnalysis() {
+            const totalHours = dailyLogs.reduce((sum, log) => sum + (parseFloat(log.hours) || 0), 0);
+            const avgDailyHours = dailyLogs.length > 0 ? (totalHours / dailyLogs.length).toFixed(1) : 0;
+            
+            document.getElementById('total-study-hours').textContent = `${totalHours.toFixed(1)}h`;
+            document.getElementById('avg-daily-hours').textContent = `${avgDailyHours}h`;
+            
+            // Find peak study day
+            const dayHours = {};
+            dailyLogs.forEach(log => {
+                const dayOfWeek = new Date(log.date).getDay();
+                const dayName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][dayOfWeek];
+                dayHours[dayName] = (dayHours[dayName] || 0) + (parseFloat(log.hours) || 0);
+            });
+            
+            const peakDay = Object.keys(dayHours).reduce((a, b) => dayHours[a] > dayHours[b] ? a : b, '-');
+            document.getElementById('peak-study-day').textContent = peakDay;
+
+            // Study time chart
+            const ctx = document.getElementById('studyTimeChart').getContext('2d');
+            const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const dayData = dayNames.map(day => dayHours[day] || 0);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: dayNames,
+                    datasets: [{
+                        label: 'Hours',
+                        data: dayData,
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        function generateSmartInsights() {
+            const insights = [];
+            const suggestions = [];
+            
+            // Performance insights
+            if (contests.length >= 3) {
+                const recentSolved = contests.slice(-3).reduce((sum, c) => sum + (parseInt(c.solved) || 0), 0) / 3;
+                const overallAvg = contests.reduce((sum, c) => sum + (parseInt(c.solved) || 0), 0) / contests.length;
+                
+                if (recentSolved > overallAvg) {
+                    insights.push("📈 Your recent contest performance is improving!");
+                } else if (recentSolved < overallAvg * 0.8) {
+                    insights.push("📉 Your recent contest performance has declined. Consider reviewing fundamentals.");
+                }
+            }
+            
+            if (dailyLogs.length > 7) {
+                const recentWeekProblems = dailyLogs.slice(-7).reduce((sum, log) => 
+                    sum + (parseInt(log.cf_solved) || 0) + (parseInt(log.ac_solved) || 0), 0);
+                
+                if (recentWeekProblems >= 20) {
+                    insights.push("🔥 Excellent problem-solving volume this week!");
+                } else if (recentWeekProblems < 10) {
+                    insights.push("⚠️ Low problem-solving activity this week.");
+                }
+            }
+            
+            // Improvement suggestions
+            const lowConfidenceTopics = topics.filter(t => parseInt(t.confidence) <= 2);
+            if (lowConfidenceTopics.length > 0) {
+                suggestions.push(`💡 Focus on improving: ${lowConfidenceTopics.slice(0, 2).map(t => t.topic).join(', ')}`);
+            }
+            
+            const commonMistakes = mistakes.reduce((acc, m) => {
+                acc[m.mistake_type] = (acc[m.mistake_type] || 0) + 1;
+                return acc;
+            }, {});
+            
+            const mostCommonMistake = Object.keys(commonMistakes).reduce((a, b) => 
+                commonMistakes[a] > commonMistakes[b] ? a : b, '');
+            
+            if (mostCommonMistake && commonMistakes[mostCommonMistake] >= 3) {
+                suggestions.push(`🎯 Work on reducing ${mostCommonMistake} errors - your most common mistake type.`);
+            }
+            
+            if (dailyLogs.length > 0) {
+                const avgHours = dailyLogs.reduce((sum, log) => sum + (parseFloat(log.hours) || 0), 0) / dailyLogs.length;
+                if (avgHours < 2) {
+                    suggestions.push("⏰ Consider increasing daily practice time to 2+ hours for faster improvement.");
+                }
+            }
+            
+            // Display insights
+            const insightsContainer = document.getElementById('performance-insights');
+            insightsContainer.innerHTML = insights.length > 0 ? 
+                insights.map(insight => `<div class="insight-item">${insight}</div>`).join('') :
+                '<div class="insight-item">Keep logging data to see personalized insights!</div>';
+            
+            const suggestionsContainer = document.getElementById('improvement-suggestions');
+            suggestionsContainer.innerHTML = suggestions.length > 0 ? 
+                suggestions.map(suggestion => `<div class="suggestion-item">${suggestion}</div>`).join('') :
+                '<div class="suggestion-item">Great job! Keep up the consistent practice.</div>';
+        }
+
+        // Add event listener for heatmap period change
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('heatmapPeriod').addEventListener('change', updateActivityHeatmap);
+        });
     </script>
 </body>
 </html>
