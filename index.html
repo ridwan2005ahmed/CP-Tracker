@@ -2228,18 +2228,49 @@
         let currentUser = null;
         let solvedChart, mistakesChart, topicsChart;
 
+        // Utility function to safely get elements
+        function safeGetElement(id) {
+            const element = document.getElementById(id);
+            if (!element) {
+                console.warn(`Element with ID '${id}' not found`);
+            }
+            return element;
+        }
+
+        // Utility function to safely set text content
+        function safeSetText(id, text) {
+            const element = safeGetElement(id);
+            if (element) {
+                element.textContent = text;
+            }
+        }
+
+        // Utility function to safely set value
+        function safeSetValue(id, value) {
+            const element = safeGetElement(id);
+            if (element) {
+                element.value = value;
+            }
+        }
+
         // Initialize the app when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
-            setupAuth();
-            setupNavigation();
-            setupModals();
-            setupEditFunctionality();
-            setupSaveEditHandler();
-            setupTaskManager();
-            setupAnalyticsButtons();
-            setupAutoFetch();
-            setupProfileSettings();
-            setDefaultDates();
+            try {
+                setupAuth();
+                setupNavigation();
+                setupModals();
+                setupEditFunctionality();
+                setupSaveEditHandler();
+                setupTaskManager();
+                setupAnalyticsButtons();
+                setupAutoFetch();
+                setupProfileSettings();
+                setDefaultDates();
+                console.log('Application initialized successfully');
+            } catch (error) {
+                console.error('Error initializing application:', error);
+                showToast('Error initializing application. Please refresh the page.', 'error');
+            }
         });
 
         // Authentication setup
@@ -2469,7 +2500,7 @@
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                     <i class="bi bi-x-circle me-2"></i>Cancel
                                 </button>
-                                <button type="button" class="btn btn-danger" onclick="performLogout()">
+                                <button type="button" class="btn btn-warning" onclick="performLogout()">
                                     <i class="bi bi-box-arrow-right me-2"></i>Yes, Logout
                                 </button>
                             </div>
@@ -2517,62 +2548,88 @@
         function loadAllData() {
             if (!currentUser) return;
             
-            const userId = currentUser.uid;
-            
-            // Load contests
-            database.ref(`users/${userId}/contests`).on('value', snapshot => {
-                const data = snapshot.val();
-                contests = data ? Object.values(data) : [];
-                console.log('Loaded contests:', contests); // Debug log
-                renderContests();
-                updateDashboardStats();
-                updateRecentContests();
-                updateCharts();
-            });
-            
-            // Load daily logs
-            database.ref(`users/${userId}/dailyLogs`).on('value', snapshot => {
-                const data = snapshot.val();
-                dailyLogs = data ? Object.values(data) : [];
-                console.log('Loaded dailyLogs:', dailyLogs); // Debug log
-                renderDailyLogs();
-                updateDashboardStats();
-                updateCharts();
-            });
-            
-            // Load mistakes
-            database.ref(`users/${userId}/mistakes`).on('value', snapshot => {
-                const data = snapshot.val();
-                mistakes = data ? Object.values(data) : [];
-                console.log('Loaded mistakes:', mistakes); // Debug log
-                renderMistakes();
-                updateDashboardStats();
-                updateRecentMistakes();
-                updateCharts();
-            });
-            
-            // Load topics
-            database.ref(`users/${userId}/topics`).on('value', snapshot => {
-                const data = snapshot.val();
-                topics = data ? Object.values(data) : [];
-                console.log('Loaded topics:', topics); // Debug log
-                renderTopics();
-                updateDashboardStats();
-                updateTopicsToImprove();
-                updateCharts();
-            });
-            
-            // Load tasks
-            database.ref(`users/${userId}/tasks`).on('value', snapshot => {
-                const data = snapshot.val();
-                tasks = data ? Object.values(data) : [];
-                console.log('Loaded tasks:', tasks); // Debug log
-                renderTasks();
-                updateDashboardStats();
-            });
-        }
+            try {
+                const userId = currentUser.uid;
+                
+                // Load contests
+                database.ref(`users/${userId}/contests`).on('value', snapshot => {
+                    try {
+                        const data = snapshot.val();
+                        contests = data ? Object.values(data) : [];
+                        console.log('Loaded contests:', contests.length);
+                        renderContests();
+                        updateDashboardStats();
+                        updateRecentContests();
+                        updateCharts();
+                    } catch (error) {
+                        console.error('Error loading contests:', error);
+                    }
+                });
+                
+                // Load daily logs
+                database.ref(`users/${userId}/dailyLogs`).on('value', snapshot => {
+                    try {
+                        const data = snapshot.val();
+                        dailyLogs = data ? Object.values(data) : [];
+                        console.log('Loaded dailyLogs:', dailyLogs.length);
+                        renderDailyLogs();
+                        updateDashboardStats();
+                        updateCharts();
+                    } catch (error) {
+                        console.error('Error loading daily logs:', error);
+                    }
+                });
+                
+                // Load mistakes
+                database.ref(`users/${userId}/mistakes`).on('value', snapshot => {
+                    try {
+                        const data = snapshot.val();
+                        mistakes = data ? Object.values(data) : [];
+                        console.log('Loaded mistakes:', mistakes.length);
+                        renderMistakes();
+                        updateDashboardStats();
+                        updateRecentMistakes();
+                        updateCharts();
+                    } catch (error) {
+                        console.error('Error loading mistakes:', error);
+                    }
+                });
+                
+                // Load topics
+                database.ref(`users/${userId}/topics`).on('value', snapshot => {
+                    try {
+                        const data = snapshot.val();
+                        topics = data ? Object.values(data) : [];
+                        console.log('Loaded topics:', topics.length);
+                        renderTopics();
+                        updateDashboardStats();
+                        updateTopicsToImprove();
+                        updateCharts();
+                    } catch (error) {
+                        console.error('Error loading topics:', error);
+                    }
+                });
+                
+                // Load tasks
+                database.ref(`users/${userId}/tasks`).on('value', snapshot => {
+                    try {
+                        const data = snapshot.val();
+                        tasks = data ? Object.values(data) : [];
+                        console.log('Loaded tasks:', tasks.length);
+                        renderTasks();
+                        updateDashboardStats();
+                        updateActiveTasks();
+                    } catch (error) {
+                        console.error('Error loading tasks:', error);
+                    }
+                });
 
-        // Save data to Firebase
+                console.log('Data loading setup completed');
+            } catch (error) {
+                console.error('Error setting up data loading:', error);
+                showToast('Error loading data. Please refresh the page.', 'error');
+            }
+        }        // Save data to Firebase
         function saveData(type, data) {
             console.log('saveData called with:', { type, data, currentUser: !!currentUser }); // Debug log
             if (!currentUser) {
@@ -3457,23 +3514,39 @@
 
         // Setup analytics time period buttons
         function setupAnalyticsButtons() {
-            document.getElementById('progress-7days').addEventListener('click', function() {
-                document.querySelectorAll('[id^="progress-"]').forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                updateDailyProgressChart(7);
-            });
+            try {
+                const progress7Days = safeGetElement('progress-7days');
+                const progress14Days = safeGetElement('progress-14days');
+                const progress30Days = safeGetElement('progress-30days');
 
-            document.getElementById('progress-14days').addEventListener('click', function() {
-                document.querySelectorAll('[id^="progress-"]').forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                updateDailyProgressChart(14);
-            });
+                if (progress7Days) {
+                    progress7Days.addEventListener('click', function() {
+                        document.querySelectorAll('[id^="progress-"]').forEach(btn => btn.classList.remove('active'));
+                        this.classList.add('active');
+                        updateDailyProgressChart(7);
+                    });
+                }
 
-            document.getElementById('progress-30days').addEventListener('click', function() {
-                document.querySelectorAll('[id^="progress-"]').forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                updateDailyProgressChart(30);
-            });
+                if (progress14Days) {
+                    progress14Days.addEventListener('click', function() {
+                        document.querySelectorAll('[id^="progress-"]').forEach(btn => btn.classList.remove('active'));
+                        this.classList.add('active');
+                        updateDailyProgressChart(14);
+                    });
+                }
+
+                if (progress30Days) {
+                    progress30Days.addEventListener('click', function() {
+                        document.querySelectorAll('[id^="progress-"]').forEach(btn => btn.classList.remove('active'));
+                        this.classList.add('active');
+                        updateDailyProgressChart(30);
+                    });
+                }
+
+                console.log('Analytics buttons setup completed');
+            } catch (error) {
+                console.error('Error setting up analytics buttons:', error);
+            }
         }
 
         // Render functions for other sections (contests, daily logs, mistakes, topics)
@@ -3608,23 +3681,28 @@
 
         // Update dashboard stats
         function updateDashboardStats() {
-            // Total contests
-            document.getElementById('total-contests').textContent = contests.length;
-            
-            // Total problems solved
-            const contestSolved = contests.reduce((sum, contest) => sum + (parseInt(contest.solved) || 0), 0);
-            const dailySolved = dailyLogs.reduce((sum, log) => 
-                sum + (parseInt(log.cf_solved) || 0) + (parseInt(log.ac_solved) || 0) + (parseInt(log.cc_solved) || 0), 0);
-            document.getElementById('total-solved').textContent = contestSolved + dailySolved;
-            
-            // Total mistakes
-            document.getElementById('total-mistakes').textContent = mistakes.length;
-            
-            // Total topics
-            document.getElementById('total-topics').textContent = topics.length;
-            
-            // Update active tasks
-            updateActiveTasks();
+            try {
+                // Total contests
+                safeSetText('total-contests', contests.length);
+                
+                // Total problems solved
+                const contestSolved = contests.reduce((sum, contest) => sum + (parseInt(contest.solved) || 0), 0);
+                const dailySolved = dailyLogs.reduce((sum, log) => 
+                    sum + (parseInt(log.cf_solved) || 0) + (parseInt(log.ac_solved) || 0) + (parseInt(log.cc_solved) || 0), 0);
+                safeSetText('total-solved', contestSolved + dailySolved);
+                
+                // Total mistakes
+                safeSetText('total-mistakes', mistakes.length);
+                
+                // Total topics
+                safeSetText('total-topics', topics.length);
+                
+                // Update active tasks
+                updateActiveTasks();
+                console.log('Dashboard stats updated successfully');
+            } catch (error) {
+                console.error('Error updating dashboard stats:', error);
+            }
         }
 
         // Modal setups
@@ -3997,12 +4075,17 @@
 
         // Set default dates in forms
         function setDefaultDates() {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('contestDate').value = today;
-            document.getElementById('dailyDate').value = today;
-            document.getElementById('mistakeDate').value = today;
-            document.getElementById('topicLastPracticed').value = today;
-            document.getElementById('taskDueDate').value = today;
+            try {
+                const today = new Date().toISOString().split('T')[0];
+                safeSetValue('contestDate', today);
+                safeSetValue('dailyDate', today);
+                safeSetValue('mistakeDate', today);
+                safeSetValue('topicLastPracticed', today);
+                safeSetValue('taskDueDate', today);
+                console.log('Default dates set successfully');
+            } catch (error) {
+                console.error('Error setting default dates:', error);
+            }
         }
 
         // Auto-fetch functionality for competitive programming platforms
